@@ -3,61 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MapManager : Singleton<MapManager>
+public class FieldManager : Singleton<FieldManager>
 {
     Dictionary<Vector3, GameObject> tileDictionary;
 
-    public MapManager()
+    public FieldManager()
     {
         tileDictionary = new Dictionary<Vector3, GameObject>();
 
-        GameObject b = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        b.transform.position = new Vector3(0, 0, 0);
-        tileDictionary.Add(b.transform.position, b);
+        var tiles = ContentManager.Instance.Tile.GetTiles();
 
-        GameObject c = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        c.transform.position = new Vector3(0, 0, 2);
-        tileDictionary.Add(c.transform.position, c);
-
-        GameObject a = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        a.transform.position = new Vector3(2, 0, 2);
-        tileDictionary.Add(a.transform.position, a);
-
-        GameObject d = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        d.transform.position = new Vector3(2, 0, 0);
-        tileDictionary.Add(d.transform.position, d);
-
-        GameObject e = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        e.transform.position = new Vector3(0, 2, 0);
-        tileDictionary.Add(e.transform.position, e);
-
-        GameObject f = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        f.transform.position = new Vector3(2, 2, 0);
-        tileDictionary.Add(f.transform.position, f);
-
-        GameObject g = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        g.transform.position = new Vector3(2, 2, 2);
-        tileDictionary.Add(g.transform.position, g);
-
-        GameObject h = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        h.transform.position = new Vector3(0, 2, 2);
-        tileDictionary.Add(h.transform.position, h);
-
-        GameObject i = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        i.transform.position = new Vector3(0, -2, 0);
-        tileDictionary.Add(i.transform.position, i);
-
-        GameObject j = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        j.transform.position = new Vector3(2, -2, 0);
-        tileDictionary.Add(j.transform.position, j);
-
-        GameObject k = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        k.transform.position = new Vector3(2, -2, 2);
-        tileDictionary.Add(k.transform.position, k);
-
-        //GameObject l = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
-        //l.transform.position = new Vector3(0, -2, 2);
-        //tileDictionary.Add(l.transform.position, l);
+        foreach ( var tileEntity in tiles )
+        {
+            Tile eachtile = tileEntity.Value;
+            GameObject tileObject = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
+            tileObject.transform.position = new Vector3(eachtile.Position[0], eachtile.Position[1], eachtile.Position[2]);
+            tileDictionary.Add(tileObject.transform.position, tileObject);
+        }
 
         InitCollider();
     }

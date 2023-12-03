@@ -1,0 +1,484 @@
+{
+  "Tiles": [
+    {
+      "ContentKey": 1,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 2,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 3,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 4,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 5,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        2,
+        0
+      ]
+    },
+    {
+      "ContentKey": 6,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        2,
+        0
+      ]
+    },
+    {
+      "ContentKey": 7,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "ContentKey": 8,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        2,
+        2
+      ]
+    },
+    {
+      "ContentKey": 9,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        -2,
+        0
+      ]
+    },
+    {
+      "ContentKey": 10,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        -2,
+        0
+      ]
+    },
+    {
+      "ContentKey": 11,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        -2,
+        2
+      ]
+    },
+    {
+      "ContentKey": 12,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        4,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 13,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 14,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        4,
+        0,
+        4
+      ]
+    },
+    {
+      "ContentKey": 15,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        6,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 16,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        6,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 17,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        6,
+        0,
+        4
+      ]
+    },
+    {
+      "ContentKey": 18,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        8,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 19,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        8,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 20,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        8,
+        0,
+        4
+      ]
+    },
+    {
+      "ContentKey": 21,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        10,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 22,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        10,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 23,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        10,
+        0,
+        4
+      ]
+    },
+    {
+      "ContentKey": 24,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        12,
+        0,
+        0
+      ]
+    },
+    {
+      "ContentKey": 25,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        12,
+        0,
+        2
+      ]
+    },
+    {
+      "ContentKey": 26,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        12,
+        0,
+        4
+      ]
+    },
+    {
+      "ContentKey": 27,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 28,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 29,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        4,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 30,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        6,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 31,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        8,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 32,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        10,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 33,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        12,
+        0,
+        6
+      ]
+    },
+    {
+      "ContentKey": 34,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 35,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 36,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        4,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 37,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        6,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 38,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 39,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        10,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 40,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        12,
+        0,
+        8
+      ]
+    },
+    {
+      "ContentKey": 41,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 42,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        2,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 43,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        4,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 44,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        6,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 45,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        8,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 46,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        10,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 47,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        12,
+        0,
+        10
+      ]
+    },
+    {
+      "ContentKey": 48,
+      "PrefabIndex": 1,
+      "Type": 1,
+      "Position": [
+        0,
+        0,
+        12
+      ]
+    }
+  ]
+}

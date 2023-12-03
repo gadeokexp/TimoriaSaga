@@ -5,11 +5,13 @@ using UnityEngine;
 public class GameInstance : MonoSingleton<GameInstance>
 {
     ResourceManager resource;
-    MapManager map;
+    FieldManager map;
+    ContentManager content;
 
     protected override void OnStart()
     {
         resource = ResourceManager.Instance;
-        map = MapManager.Instance;
+        map = FieldManager.Instance;
+        content = ContentManager.Instance;
     }
 }
