@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class UnitManager : Singleton<UnitManager>
 {
+    GameObject player = null;
+
     public UnitManager()
     {
-        GameObject player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
+        player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
 
         // 플레이어 위치 설정
         player.transform.position = Vector3.up * 5;
@@ -21,5 +23,10 @@ public class UnitManager : Singleton<UnitManager>
 
         // 부딪치고 회전하는거 방지
         rigid.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+    }
+
+    public Transform GetCameraTarget()
+    {
+        return player.transform;
     }
 }

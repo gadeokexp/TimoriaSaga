@@ -17,6 +17,5 @@ public class GameInstance : MonoSingleton<GameInstance>
         map = FieldManager.Instance;
         input = InputManager.Instance;
         unit = UnitManager.Instance;
-
     }
 }
