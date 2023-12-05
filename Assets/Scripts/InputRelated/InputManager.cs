@@ -20,7 +20,7 @@ public class InputManager : MonoSingleton<InputManager>
         _xInput = Input.GetAxisRaw("Horizontal");
         _zInput = Input.GetAxisRaw("Vertical");
 
-        if (OnMove != null)
+        if (OnMove != null && (_xInput != 0f || _zInput != 0f))
         {
             OnMove.Invoke(_xInput, _zInput);
         }   
