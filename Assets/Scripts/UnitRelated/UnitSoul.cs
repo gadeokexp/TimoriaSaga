@@ -15,6 +15,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     Vector3 _lookingDirection;
     Coroutine _rotationTolook;
 
+    // 대각 이동에 관한 키보드입력 보정처리
+    float _diagonalMovementDelta = 0;
+    float _prevXInput = 0;
+    float _prevZInput = 0;
+
     void Start()
     {
         StateInit(this);
@@ -39,6 +44,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     {
         if (XInput == 0f && ZInput == 0f)
         {
+            if(_diagonalMovementDelta < 0.1f)
+            {
+                _lookingDirection = new Vector3(_prevXInput, 0, _prevZInput).normalized;
+            }
+
             if (currentState == states[(int)UnitState.Move])
             {
                 ChangeState(states[(int)UnitState.Idle]);
@@ -50,10 +60,22 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             {
                 ChangeState(states[(int)UnitState.Move]);
             }
-            // 사용자 인풋이나, 패킷에 수신등의 이벤트등으로 콜된다.
-            _lookingDirection = new Vector3(XInput, 0, ZInput).normalized;
 
-            transform.position += _lookingDirection * Time.deltaTime * 3;
+            float deltaTime = Time.deltaTime;
+
+            if (XInput != 0f && ZInput != 0f)
+            {
+                _prevXInput = XInput;
+                _prevZInput = ZInput;
+                _diagonalMovementDelta = 0f;
+            }
+            else if(_diagonalMovementDelta < 0.1f)
+            {
+                _diagonalMovementDelta += deltaTime;
+            }
+
+            _lookingDirection = new Vector3(XInput, 0, ZInput).normalized;
+            transform.position += _lookingDirection * deltaTime * 3;
 
             if (_rotationTolook == null)
             {
@@ -64,17 +86,17 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnMoveEnter()
     {
-        animator.Play("Run_SwordShield");
+        animator.SetBool("IsMoving", true);
     }
 
     void OnMoveExit()
     {
-        animator.StopPlayback();
+        animator.SetBool("IsMoving", false);
     }
 
     void OnIdleEnter()
     {
-        animator.Play("Idle_SwordShield");
+        animator.SetBool("IsMoving", false); 
     }
 
     IEnumerator RotationtoLook()
