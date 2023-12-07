@@ -1,35 +1,80 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Scripting;
 
-public class UnitSoul : MonoBehaviour
+public class UnitSoul : UnitStateAgent<UnitSoul>
 {
     [SerializeField]
     public bool isMyCharacter = true;
+
+    private Animator animator;
 
     Vector3 _lookingDirection;
     Coroutine _rotationTolook;
 
     void Start()
-    { 
-        if(isMyCharacter )
+    {
+        StateInit(this);
+
+        MoveState<UnitSoul> moveState = states[(int)UnitState.Move] as MoveState<UnitSoul>;
+        moveState.Execute = OnMove;
+        moveState.Enter = OnMoveEnter;
+        moveState.Exit = OnMoveExit;
+
+        IdleState<UnitSoul> idleState = states[(int)UnitState.Idle] as IdleState<UnitSoul>;
+        idleState.Enter = OnIdleEnter;
+
+        if (isMyCharacter)
         {
-            InputManager.Instance.OnMove += OnMove;
+            InputManager.Instance.OnMoveInput += moveState.Execute;
         }
+
+        animator = GetComponent<Animator>();
     }
 
     void OnMove(float XInput, float ZInput)
     {
-        // 사용자 인풋이나, 패킷에 수신등의 이벤트등으로 콜된다.
-        _lookingDirection = new Vector3(XInput, 0, ZInput).normalized;
-
-        transform.position += _lookingDirection * Time.deltaTime * 3;
-
-        if (_rotationTolook == null)
+        if (XInput == 0f && ZInput == 0f)
         {
-            _rotationTolook = StartCoroutine(RotationtoLook());
+            if (currentState == states[(int)UnitState.Move])
+            {
+                ChangeState(states[(int)UnitState.Idle]);
+            }
         }
+        else
+        {
+            if (currentState != states[(int)UnitState.Move])
+            {
+                ChangeState(states[(int)UnitState.Move]);
+            }
+            // 사용자 인풋이나, 패킷에 수신등의 이벤트등으로 콜된다.
+            _lookingDirection = new Vector3(XInput, 0, ZInput).normalized;
+
+            transform.position += _lookingDirection * Time.deltaTime * 3;
+
+            if (_rotationTolook == null)
+            {
+                _rotationTolook = StartCoroutine(RotationtoLook());
+            }
+        }
+    }
+
+    void OnMoveEnter()
+    {
+        animator.Play("Run_SwordShield");
+    }
+
+    void OnMoveExit()
+    {
+        animator.StopPlayback();
+    }
+
+    void OnIdleEnter()
+    {
+        animator.Play("Idle_SwordShield");
     }
 
     IEnumerator RotationtoLook()
