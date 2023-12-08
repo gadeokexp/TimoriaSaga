@@ -36,7 +36,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
         ChangeState(states[(int)UnitState.Idle]);
     }
 
-    public void UpdateState()
+    public void AgentUpdate()
     {
         if(currentState != null && currentState.Update != null)
         {
@@ -48,9 +48,17 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
     {
         if (newState == null) return;
 
-        if (currentState != null && currentState.Exit != null)
+        if (currentState != null)
         {
-            currentState.Exit();
+            if(!currentState.isTransforable(newState.ID))
+            {
+                return;
+            }
+
+            if (currentState.Exit != null)
+            {
+                currentState.Exit();
+            }
         }
 
         currentState = newState;
@@ -66,7 +74,14 @@ public class IdleState<T> : FiniteState<T> where T : class
 {
     public IdleState(T newOwner)
     {
+        _id = (int)UnitState.Idle;
+
         owner = newOwner;
+
+        transferableState.Add((int)UnitState.Move);
+        transferableState.Add((int)UnitState.Hit);
+        transferableState.Add((int)UnitState.Beaten);
+        transferableState.Add((int)UnitState.Die);
     }
 }
 
@@ -74,17 +89,36 @@ public class MoveState<T> : FiniteState<T> where T : class
 {
     public MoveState(T newOwner)
     {
-        owner = newOwner;
-    }
+        _id = (int)UnitState.Move;
 
-    public InputManager.MoveEvent Execute;
+        owner = newOwner;
+
+        transferableState.Add((int)UnitState.Idle);
+        transferableState.Add((int)UnitState.Hit);
+        transferableState.Add((int)UnitState.Beaten);
+        transferableState.Add((int)UnitState.Die);
+    }
 }
 
 public class HitState<T> : FiniteState<T> where T : class
 {
     public HitState(T newOwner)
     {
+        _id = (int)UnitState.Hit;
+
         owner = newOwner;
+
+        //transferableState.Add((int)UnitState.Idle);
+        //transferableState.Add((int)UnitState.Move);
+        transferableState.Add((int)UnitState.Beaten);
+        transferableState.Add((int)UnitState.Die);
+
+        Enter += EnterBase;
+    }
+
+    private void EnterBase()
+    {
+        Debug.Log("aaa");
     }
 }
 
@@ -92,6 +126,8 @@ public class BeatenState<T> : FiniteState<T> where T : class
 {
     public BeatenState(T newOwner)
     {
+        _id = (int)UnitState.Beaten;
+
         owner = newOwner;
     }
 }
@@ -100,6 +136,8 @@ public class DieState <T> : FiniteState<T> where T : class
 {
     public DieState(T newOwner)
     {
+        _id = (int)UnitState.Die;
+
         owner = newOwner;
     }
 }

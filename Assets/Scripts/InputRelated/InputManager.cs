@@ -3,42 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class UsedInput
+{
+    public float XInput;
+    public float ZInput;
+    public bool Jump;
+    public bool Function1;
+    public bool Function2;
+}
+
 public class InputManager : MonoSingleton<InputManager>
 {
-    float _xInput;
-    float _zInput;
+    UsedInput _input;
+    public delegate void InputEvent(ref UsedInput input);
+    public event InputEvent OnInput;
 
-    public float XInput => _xInput;
-    public float ZInput => _zInput;
-
-    public delegate void MoveEvent(float x, float z);
-    public event MoveEvent OnMoveInput;
-
-    public delegate void Fuction1Event();
-    public event Fuction1Event OnFunction1Input;
-
-    public delegate void Fuction2Event();
-    public event Fuction1Event OnFunction2Input;
+    private void Start()
+    {
+        _input = new UsedInput();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (OnMoveInput != null)
+        if (OnInput != null)
         {
-            _xInput = Input.GetAxisRaw("Horizontal");
-            _zInput = Input.GetAxisRaw("Vertical");
+            _input.XInput = Input.GetAxisRaw("Horizontal");
+            _input.ZInput = Input.GetAxisRaw("Vertical");
+            _input.Jump = Input.GetButtonDown("Jump");
+            _input.Function1 = Input.GetButtonDown("Fire1");
+            _input.Function2 = Input.GetButtonDown("Fire2");
 
-            OnMoveInput.Invoke(_xInput, _zInput);
-        }
-
-        if (OnFunction1Input != null && Input.GetKeyDown("Fire1"))
-        {
-            OnFunction1Input.Invoke();
-        }
-
-        if (OnFunction2Input != null && Input.GetKeyDown("Fire2"))
-        {
-            OnFunction2Input.Invoke();
+            OnInput.Invoke(ref _input);
         }
     }
 }
