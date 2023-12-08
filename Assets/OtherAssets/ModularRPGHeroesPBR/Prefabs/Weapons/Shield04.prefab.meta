@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2f944e5b82a75e140b0ee96522b2a239
+timeCreated: 1526519954
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Prefabs/Weapons/Shield04.prefab
+  uploadId: 544865

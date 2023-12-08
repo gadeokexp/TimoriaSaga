@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6548c7d53ccee144aabee1741cb12a09
+timeCreated: 1548921327
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/Scene/TPControl_DoubleSword.unity
+  uploadId: 544865

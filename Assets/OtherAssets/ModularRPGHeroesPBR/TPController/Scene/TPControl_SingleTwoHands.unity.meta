@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 59046e8cf47b1ed4f9c87ef605ab9209
+timeCreated: 1548908692
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/Scene/TPControl_SingleTwoHands.unity
+  uploadId: 544865

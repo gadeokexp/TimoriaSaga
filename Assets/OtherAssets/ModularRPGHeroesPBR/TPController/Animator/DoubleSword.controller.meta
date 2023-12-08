@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0200f19c25e9ffd4eb339edd3c360527
+timeCreated: 1546071923
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/Animator/DoubleSword.controller
+  uploadId: 544865

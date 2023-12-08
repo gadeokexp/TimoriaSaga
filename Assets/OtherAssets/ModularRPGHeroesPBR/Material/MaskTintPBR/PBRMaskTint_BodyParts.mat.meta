@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 11929e30e419bf242808f5168f04a679
+timeCreated: 1550139212
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Material/MaskTintPBR/PBRMaskTint_BodyParts.mat
+  uploadId: 544865

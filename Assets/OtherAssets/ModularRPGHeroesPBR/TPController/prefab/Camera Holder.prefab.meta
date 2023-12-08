@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6c4016ef1a0931340b7a4560f7da7595
+timeCreated: 1548112280
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/prefab/Camera Holder.prefab
+  uploadId: 544865

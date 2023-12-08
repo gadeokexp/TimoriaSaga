@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: da598bb54688a9f49a4f6290dd289901
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Prefabs/BasicCharactersForMaskTintShader/MaskTint_SwordAndShield01.prefab
+  uploadId: 544865

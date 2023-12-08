@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f55d45b4195aa664f83bae1b719de2dc
+timeCreated: 1576813002
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Scene/SingleTwoHandsShowcase.unity
+  uploadId: 544865

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0205ad0993780b64bab3d4dceac2f090
+timeCreated: 1550106695
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/prefab/Controller.prefab
+  uploadId: 544865

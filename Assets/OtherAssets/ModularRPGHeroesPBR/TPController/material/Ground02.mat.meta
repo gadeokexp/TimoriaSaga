@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d682192d37079814d9a537679582de17
+timeCreated: 1546305508
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/material/Ground02.mat
+  uploadId: 544865

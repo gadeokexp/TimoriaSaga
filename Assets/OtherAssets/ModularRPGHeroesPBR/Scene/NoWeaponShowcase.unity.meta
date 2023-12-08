@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 59ce811b09035e34489feaa117ec8199
+timeCreated: 1576814557
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Scene/NoWeaponShowcase.unity
+  uploadId: 544865

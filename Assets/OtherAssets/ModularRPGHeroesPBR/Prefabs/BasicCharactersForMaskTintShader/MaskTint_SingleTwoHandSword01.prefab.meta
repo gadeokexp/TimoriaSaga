@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fcfb09bf45fe77c45951a337f358a2eb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Prefabs/BasicCharactersForMaskTintShader/MaskTint_SingleTwoHandSword01.prefab
+  uploadId: 544865

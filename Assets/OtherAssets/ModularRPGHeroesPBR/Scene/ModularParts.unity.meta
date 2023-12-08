@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 99250cf97cc554e4d849eb7d6b7583e5
+timeCreated: 1550139405
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Scene/ModularParts.unity
+  uploadId: 544865

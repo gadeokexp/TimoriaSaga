@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: aca1a5c7f85d38644bcf1a1ec840f822
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/Prefabs/BasicCharactersForMaskTintShader/MaskTint_MagicWand01.prefab
+  uploadId: 544865

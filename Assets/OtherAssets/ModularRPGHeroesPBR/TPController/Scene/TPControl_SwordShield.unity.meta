@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f009e14939743b442b48de2b65f0d9d2
+timeCreated: 1546072432
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124718
+  packageName: Modular RPG Hero PBR
+  packageVersion: 1.6
+  assetPath: Assets/ModularRPGHeroesPBR/TPController/Scene/TPControl_SwordShield.unity
+  uploadId: 544865
