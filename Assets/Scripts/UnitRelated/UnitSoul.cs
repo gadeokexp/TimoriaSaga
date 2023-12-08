@@ -56,7 +56,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             // 공격키가 눌렸고 현재 공격상태가 아니면 공격상태로 전환한다.
             ChangeState(states[(int)UnitState.Hit]);
         }
-        else if((input.XInput != 0f || input.ZInput != 0f) && currentState != states[(int)UnitState.Move])
+        else if((input.XInput != 0f || input.ZInput != 0f))
         {
             // 입력 대응 2순위
             // 이동키가 눌렸고 현재 이동상태가  아니면 이동상태로 전환한다.
@@ -164,7 +164,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     IEnumerator WaitForSwing()
     {
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.6f);
         Debug.Log("bbb");
         currentState = null;
     }
