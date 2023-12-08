@@ -105,7 +105,7 @@ public abstract class MonoSingleton<T> : MonoSingleton where T : MonoBehaviour
                         return mbInstance = instances[0];
                     }
 
-                    Debug.LogWarning($"[{nameof(MonoSingleton)}<{typeof(T)}>] is Duplicated");
+                    Debug.LogWarning($"MonoBehaviour Singleton {typeof(T)} is Duplicated");
 
                     for (int i = 1; i < instances.Length; i++) {
                         Destroy(instances[i]);
@@ -113,7 +113,7 @@ public abstract class MonoSingleton<T> : MonoSingleton where T : MonoBehaviour
                     return mbInstance = instances[0];
                 }
 
-                Debug.Log($"[{nameof(MonoSingleton)}<{typeof(T)}>] is Created");
+                Debug.Log($"MonoBehaviour Singleton {typeof(T)} is Created");
 
                 return mbInstance = new GameObject($"({nameof(MonoSingleton)}){typeof(T)}").AddComponent<T>();
             }

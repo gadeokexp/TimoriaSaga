@@ -8,11 +8,13 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public GameObject Tile1;
     public GameObject Player;
+    public GameObject Player2;
 
     public ResourceManager()
     {
         Tile1 = Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center");
-        Player = Resources.Load<GameObject>("Prefabs/Unit/RPGHEroPBR");
+        Player = Resources.Load<GameObject>("Prefabs/Unit/RPGHeroPBR");
+        Player2 = Resources.Load<GameObject>("Prefabs/Unit/DoubleSword05");
     }
 
     public GameObject SpawnObject(GameObject obj)
