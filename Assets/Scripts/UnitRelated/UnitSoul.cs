@@ -16,11 +16,15 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     Vector3 _lookingDirection;
     Coroutine _rotationTolook;
 
+    UsedInput _input;
+
     // 대각 이동에 관한 키보드입력 보정처리
     float _diagonalMovementDelta = 0;
     float _prevDiagonalX = 0;
     float _prevDiagonalZ = 0;
-    UsedInput _input;
+    float _prevX = 0;
+    float _prevZ = 0;
+   
 
     void Start()
     {
@@ -41,6 +45,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         if (isMyCharacter)
         {
             InputManager.Instance.OnInput += OnInput;
+            _input = InputManager.Instance.GameInput;
         }
 
         animator = GetComponent<Animator>();
@@ -48,8 +53,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnInput(ref UsedInput input)
     {
-        _input = input;
-
         if (input.Function1 && currentState != states[(int)UnitState.Hit])
         {
             // 입력 대응 1순위
@@ -99,13 +102,17 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             _diagonalMovementDelta += deltaTime;
         }
 
-        _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
-        transform.position += _lookingDirection * deltaTime * 3;
-
-        if (_rotationTolook == null)
+        if (_input.DirectionChanged)
         {
-            _rotationTolook = StartCoroutine(RotationtoLook());
+            _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
+
+            if (_rotationTolook == null)
+            {
+                _rotationTolook = StartCoroutine(RotationtoLook());
+            }
         }
+
+        transform.position += _lookingDirection * deltaTime * 3;
     }
 
     void OnIdleEnter()
@@ -165,7 +172,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     IEnumerator WaitForSwing()
     {
         yield return new WaitForSeconds(0.6f);
-        Debug.Log("bbb");
         currentState = null;
     }
 }

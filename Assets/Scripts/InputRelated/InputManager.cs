@@ -10,13 +10,19 @@ public class UsedInput
     public bool Jump;
     public bool Function1;
     public bool Function2;
+    public bool DirectionChanged;
 }
 
 public class InputManager : MonoSingleton<InputManager>
 {
+    public UsedInput GameInput => _input;
     UsedInput _input;
+
     public delegate void InputEvent(ref UsedInput input);
     public event InputEvent OnInput;
+
+    float _prevXInput = 0;
+    float _prevZInput = 0;
 
     private void Start()
     {
@@ -33,6 +39,17 @@ public class InputManager : MonoSingleton<InputManager>
             _input.Jump = Input.GetButtonDown("Jump");
             _input.Function1 = Input.GetButtonDown("Fire1");
             _input.Function2 = Input.GetButtonDown("Fire2");
+
+            if(_prevXInput != _input.XInput || _prevZInput != _input.ZInput)
+            {
+                _input.DirectionChanged = true;
+                _prevXInput = _input.XInput;
+                _prevZInput = _input.ZInput;
+            }
+            else
+            {
+                _input.DirectionChanged = false;
+            }
 
             OnInput.Invoke(ref _input);
         }

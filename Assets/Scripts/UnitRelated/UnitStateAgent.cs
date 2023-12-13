@@ -50,6 +50,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
 
         if (currentState != null)
         {
+            // 현상태와 바뀌는 상태가 같을경우 여기서 처리해주자
             if(!currentState.isTransforable(newState.ID))
             {
                 return;
