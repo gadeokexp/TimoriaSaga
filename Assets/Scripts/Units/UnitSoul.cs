@@ -22,9 +22,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     float _diagonalMovementDelta = 0;
     float _prevDiagonalX = 0;
     float _prevDiagonalZ = 0;
-    float _prevX = 0;
-    float _prevZ = 0;
-   
 
     void Start()
     {
@@ -91,25 +88,32 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     {
         float deltaTime = Time.deltaTime;
 
-        if (_input.XInput != 0f && _input.ZInput != 0f)
+        if(isMyCharacter)
         {
-            _prevDiagonalX = _input.XInput;
-            _prevDiagonalZ = _input.ZInput;
-            _diagonalMovementDelta = 0f;
-        }
-        else if (_diagonalMovementDelta < 0.1f)
-        {
-            _diagonalMovementDelta += deltaTime;
-        }
-
-        if (_input.DirectionChanged)
-        {
-            _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
-
-            if (_rotationTolook == null)
+            if (_input.XInput != 0f && _input.ZInput != 0f)
             {
-                _rotationTolook = StartCoroutine(RotationtoLook());
+                _prevDiagonalX = _input.XInput;
+                _prevDiagonalZ = _input.ZInput;
+                _diagonalMovementDelta = 0f;
             }
+            else if (_diagonalMovementDelta < 0.1f)
+            {
+                _diagonalMovementDelta += deltaTime;
+            }
+
+            if (_input.DirectionChanged)
+            {
+                _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
+
+                if (_rotationTolook == null)
+                {
+                    _rotationTolook = StartCoroutine(RotationtoLook());
+                }
+            }
+        }
+        else
+        {
+
         }
 
         transform.position += _lookingDirection * deltaTime * 3;
