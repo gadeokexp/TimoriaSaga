@@ -76,6 +76,9 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnMoveEnter()
     {
+        _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
+        _rotationTolook = StartCoroutine(RotationtoLook());
+
         animator.SetInteger("currentState", (int)UnitState.Move);
     }
 

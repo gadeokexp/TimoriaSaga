@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -12,12 +13,12 @@ namespace TimoriaSagaDummyClient
     {
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"OnConnected : {endPoint}");
+            UnityEngine.Debug.Log($"서버에 접속 됨");
         }
 
         public override void OnDisconnected(EndPoint endPoint)
         {
-            Console.WriteLine($"OnDisconnected : {endPoint}");
+            UnityEngine.Debug.Log($"서버와 접속 끊김");
         }
 
         public override void OnReceivePacket(ArraySegment<byte> buffer)

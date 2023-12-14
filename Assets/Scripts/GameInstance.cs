@@ -10,6 +10,9 @@ public class GameInstance : MonoSingleton<GameInstance>
     InputManager input;
     UnitManager unit;
 
+    // 모노 싱글톤
+    NetworkManager network;
+
     protected override void OnStart()
     {
         resource = ResourceManager.Instance;
@@ -17,5 +20,6 @@ public class GameInstance : MonoSingleton<GameInstance>
         map = FieldManager.Instance;
         input = InputManager.Instance;
         unit = UnitManager.Instance;
+        network = NetworkManager.Instance;
     }
 }
