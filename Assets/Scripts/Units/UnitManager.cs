@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class UnitManager : Singleton<UnitManager>
 {
-    GameObject player = null;
-    GameObject player2 = null;
+    GameObject _player = null;
+    List<GameObject> _otherPlayers = new List<GameObject>();
 
     public UnitManager()
     {
+        //SpawnUnit(true, 0, 5, 0);
+    }
+
+    public void SpawnUnit(bool isMyCharacter, float x, float y, float z)
+    {
         // 첫번째 플레이어
-        player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
+        GameObject player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
 
-        player.transform.position = Vector3.up * 5;
+        //player.transform.position = Vector3.up * 5;
+        player.transform.position = new Vector3(x, y, z);
 
-        // 플레이어 컴포넌트 설정
+        // 리지드 바디
         Rigidbody rigid = player.AddComponent<Rigidbody>();
-        player.AddComponent<UnitSoul>();
+
+        // 소울
+        UnitSoul soul = player.AddComponent<UnitSoul>();
+        soul.isMyCharacter = isMyCharacter;        
+
+        // 충돌체
         CapsuleCollider cc = player.AddComponent<CapsuleCollider>();
         cc.height = 1.88f;
         cc.radius = 0.5f;
@@ -25,26 +36,19 @@ public class UnitManager : Singleton<UnitManager>
         // 부딪치고 회전하는거 방지
         rigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
+        if (isMyCharacter)
+        {
+            _player = player;
+        }
+        else
+        {
+            _otherPlayers.Add(player);
+        }
 
-        // 두번째 플레이어
-        player2 = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player2);
-
-        // 플레이어 위치 설정
-        player2.transform.position = Vector3.right * 5 + Vector3.up * 2;
-        
-        rigid = player2.AddComponent<Rigidbody>();
-        player2.AddComponent<UnitSoul>();
-        cc = player2.AddComponent<CapsuleCollider>();
-        cc.height = 1.88f;
-        cc.radius = 0.5f;
-        cc.center = new Vector3(0, 0.9f, 0);
-
-        // 부딪치고 회전하는거 방지
-        rigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     public Transform GetCameraTarget()
     {
-        return player.transform;
+        return _player != null? _player.transform : GameInstance.Instance.transform;
     }
 }

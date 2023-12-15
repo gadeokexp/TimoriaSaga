@@ -17,7 +17,7 @@ public class PacketManager
     }
     #endregion
 
-    Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>> maMakePacketJob
+    Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>> maMakePacketJob 
         = new Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>>();
     Dictionary<ushort, Action<PacketSession, IPacket>> maHandler
         = new Dictionary<ushort, Action<PacketSession, IPacket>>();
@@ -26,10 +26,10 @@ public class PacketManager
 
     public void Register()
     {
-        maMakePacketJob.Add((ushort)PacketID.STC_EnterGame, MakePacket<STC_EnterGame>);
-        maHandler.Add((ushort)PacketID.STC_EnterGame, PacketHandler.STC_EnterGameHandler);
-        maMakePacketJob.Add((ushort)PacketID.STC_LeaveGame, MakePacket<STC_LeaveGame>);
-        maHandler.Add((ushort)PacketID.STC_LeaveGame, PacketHandler.STC_LeaveGameHandler);
+        maMakePacketJob.Add((ushort)PacketID.STC_EnterField, MakePacket<STC_EnterField>);
+        maHandler.Add((ushort)PacketID.STC_EnterField, PacketHandler.STC_EnterFieldHandler);
+        maMakePacketJob.Add((ushort)PacketID.STC_LeaveField, MakePacket<STC_LeaveField>);
+        maHandler.Add((ushort)PacketID.STC_LeaveField, PacketHandler.STC_LeaveFieldHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Spawn, MakePacket<STC_Spawn>);
         maHandler.Add((ushort)PacketID.STC_Spawn, PacketHandler.STC_SpawnHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_UnitSpawn, MakePacket<STC_UnitSpawn>);
@@ -68,8 +68,8 @@ public class PacketManager
         ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
         count += 2;
 
-        Func<PacketSession, ArraySegment<byte>, IPacket> packetJob = null;
-        if (maMakePacketJob.TryGetValue(id, out packetJob))
+        Func < PacketSession, ArraySegment<byte>, IPacket> packetJob = null;
+        if(maMakePacketJob.TryGetValue(id, out packetJob))
         {
             IPacket packet = packetJob.Invoke(session, buffer);
 
@@ -86,7 +86,7 @@ public class PacketManager
         }
     }
 
-    T MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()
+    T MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new() 
     {
         // 함수가 받는 제너릭 인자는 IPacket인터페이스를 상속받으면서 동시에 new로 생성가능한 클래스여야 한다
 

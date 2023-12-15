@@ -4,13 +4,14 @@ using UnityEngine;
 
 internal class PacketHandler
 {
-    public static void STC_EnterGameHandler(PacketSession session, IPacket packet)
+    public static void STC_EnterFieldHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
+        STC_EnterField enterPacket = packet as STC_EnterField;
+
+        UnitManager.Instance.SpawnUnit(true, enterPacket.positionX, enterPacket.positionY, enterPacket.positionZ);
     }
 
-    public static void STC_LeaveGameHandler(PacketSession session, IPacket packet)
+    public static void STC_LeaveFieldHandler(PacketSession session, IPacket packet)
     {
         //STC_Chat chatPacket = packet as STC_Chat;
         //ClientSideSession clientSideSession = session as ClientSideSession;
@@ -110,7 +111,7 @@ internal class PacketHandler
         {
             // 이미 만든 플레이어가 응답으로 왔을때는 첫번째 캐릭터로 로그인(사실 하나밖에 없다)
             STC_PermitLogin.Unit unitInfo = loginPacket.units[0];
-            CTS_EnterGame enterPacket = new CTS_EnterGame();
+            CTS_EnterField enterPacket = new CTS_EnterField();
             enterPacket.UnitName = unitInfo.UnitName;
             NetworkManager.Instance.Send(enterPacket.Write());
         }

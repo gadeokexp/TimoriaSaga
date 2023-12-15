@@ -87,6 +87,8 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         currentState = null;
     }
 
+    float _movePacketInterval = 0.05f;
+
     void OnMoveUpdate()
     {
         float deltaTime = Time.deltaTime;
@@ -120,6 +122,13 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
 
         transform.position += _lookingDirection * deltaTime * 3;
+        _movePacketInterval -= deltaTime;
+
+        if (_movePacketInterval < 0)
+        {
+            SendMovePacket();
+            _movePacketInterval = 0.05f;
+        }
     }
 
     void OnIdleEnter()
@@ -181,4 +190,18 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         yield return new WaitForSeconds(0.6f);
         currentState = null;
     }
+
+    protected void SendMovePacket()
+    {
+            CTS_Move movePacket = new CTS_Move();
+            movePacket.positionX = transform.position.x;
+            movePacket.positionY = transform.position.y;
+            movePacket.positionZ = transform.position.z;
+            movePacket.directionX = _lookingDirection.x;
+            movePacket.directionZ = _lookingDirection.z;
+            movePacket.timeStamp = 33333333;
+
+            NetworkManager.Instance.Send(movePacket.Write());
+    }
+
 }
