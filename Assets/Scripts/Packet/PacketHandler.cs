@@ -8,7 +8,7 @@ internal class PacketHandler
     {
         STC_EnterField enterPacket = packet as STC_EnterField;
 
-        UnitManager.Instance.SpawnUnit(true, enterPacket.positionX, enterPacket.positionY, enterPacket.positionZ);
+        UnitManager.Instance.SpawnUnit(true, enterPacket.GameObjectId, enterPacket.positionX, enterPacket.positionY, enterPacket.positionZ);
     }
 
     public static void STC_LeaveFieldHandler(PacketSession session, IPacket packet)
@@ -25,8 +25,16 @@ internal class PacketHandler
 
     public static void STC_UnitSpawnHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
+        // 사용자의 MyUnit을 제외한 모든 객체는 결국 이 Spawnhandler를 통해 생성된다
+        // 다른 사용자의 Unit도, Monster도, 화살도, 등등 모든 것들이 다.
+        // 그리고 이런것들은 다 각자의 유니크한 ID를 가지고 있다.
+
+        STC_UnitSpawn spawnPacket = packet as STC_UnitSpawn;
+
+        foreach (STC_UnitSpawn.GameObject objectInfo in spawnPacket.gameObjects)
+        {
+            UnitManager.Instance.SpawnUnit(false, objectInfo.GameObjectId, objectInfo.positionX, objectInfo.positionY, objectInfo.positionZ);
+        }
     }
 
     public static void STC_DieHandler(PacketSession session, IPacket packet)
@@ -43,8 +51,14 @@ internal class PacketHandler
 
     public static void STC_DespawnHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
+        //Debug.Log($"Despawn {miTestCount++}");
+
+        STC_Despawn despawnPacket = packet as STC_Despawn;
+
+        foreach (STC_Despawn.GameObjectId gameObjectId in despawnPacket.gameObjectIds)
+        {
+            UnitManager.Instance.DespawnUnit(gameObjectId.ID);
+        }
     }
 
     public static void STC_DespawnProjectileAtHandler(PacketSession session, IPacket packet)
@@ -88,6 +102,10 @@ internal class PacketHandler
         // 단지 이때는 로컬에 있는 모든 클라이언트가 같은 값을 뱉을 수 있기에 주의 필요
         //SystemInfo.deviceUniqueIdentifier;
         loginPacket.UniqueId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+
+        // 일단 이걸 ID로 쓰자
+        NetworkManager.Instance.UniqueId = loginPacket.UniqueId;
+
         NetworkManager.Instance.Send(loginPacket.Write());
     }
 

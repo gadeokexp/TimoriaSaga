@@ -21,4 +21,9 @@ public class ResourceManager : Singleton<ResourceManager>
     {
         return Object.Instantiate(obj);
     }
+
+    public void DespawnObject(GameObject obj)
+    {
+        Object.Destroy(obj);
+    }
 }

@@ -9,6 +9,7 @@ using UnityEngine;
 public class NetworkManager : MonoSingleton<NetworkManager>
 {
     ClientSideSession mcSession = new ClientSideSession();
+    public string UniqueId;
 
     public void Start()
     {

@@ -5,14 +5,14 @@ using UnityEngine;
 public class UnitManager : Singleton<UnitManager>
 {
     GameObject _player = null;
-    List<GameObject> _otherPlayers = new List<GameObject>();
+    Dictionary<int, GameObject> _otherPlayers = new Dictionary<int, GameObject>();
 
     public UnitManager()
     {
         //SpawnUnit(true, 0, 5, 0);
     }
 
-    public void SpawnUnit(bool isMyCharacter, float x, float y, float z)
+    public void SpawnUnit(bool isMyCharacter, int Id, float x, float y, float z)
     {
         // 첫번째 플레이어
         GameObject player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
@@ -42,7 +42,7 @@ public class UnitManager : Singleton<UnitManager>
         }
         else
         {
-            _otherPlayers.Add(player);
+            _otherPlayers.Add(Id, player);
         }
 
     }
@@ -50,5 +50,16 @@ public class UnitManager : Singleton<UnitManager>
     public Transform GetCameraTarget()
     {
         return _player != null? _player.transform : GameInstance.Instance.transform;
+    }
+
+    public void DespawnUnit(int id)
+    {
+        GameObject unit;
+
+        if(_otherPlayers.TryGetValue(id, out unit))
+        {
+            _otherPlayers.Remove(id);
+            ResourceManager.Instance.DespawnObject(unit.gameObject);
+        }
     }
 }
