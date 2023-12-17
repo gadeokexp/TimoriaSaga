@@ -4,17 +4,29 @@ using UnityEngine;
 
 public class CameraSoul : MonoBehaviour
 {
-    public Transform Target => target;
-    private Transform target;
+    public Transform Target { get => _target; set { _target = value; } }
+    private Transform _target;
 
     private void Start()
     {
-        target = UnitManager.Instance.GetCameraTarget();
+        UnitManager.Instance.SetCamreaSlot = SetCameraTarget;
+        _target = transform;
     }
-
     void Update()
     {
-        transform.position = new Vector3(target.position.x, target.position.y + 10f, target.position.z - 10f);
-        transform.LookAt(target.position);
+        transform.position = new Vector3(_target.position.x, _target.position.y + 10f, _target.position.z - 10f);
+        transform.LookAt(_target.position);
+    }
+
+    void SetCameraTarget()
+    {
+        if(UnitManager.Instance.Player != null)
+        {
+            Target = UnitManager.Instance.Player.transform;
+        }
+        else
+        {
+            Target = GameInstance.Instance.transform;
+        }
     }
 }

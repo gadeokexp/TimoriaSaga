@@ -1,10 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class UnitManager : Singleton<UnitManager>
 {
+    public GameObject Player => _player;
     GameObject _player = null;
+
+    public Action SetCamreaSlot;
+
     Dictionary<int, GameObject> _otherPlayers = new Dictionary<int, GameObject>();
 
     public UnitManager()
@@ -40,16 +46,12 @@ public class UnitManager : Singleton<UnitManager>
         if (isMyCharacter)
         {
             _player = player;
+            if (SetCamreaSlot != null) SetCamreaSlot.Invoke();
         }
         else
         {
             _otherPlayers.Add(Id, player);
         }
-    }
-
-    public Transform GetCameraTarget()
-    {
-        return _player != null? _player.transform : GameInstance.Instance.transform;
     }
 
     public void DespawnUnit(int id)
