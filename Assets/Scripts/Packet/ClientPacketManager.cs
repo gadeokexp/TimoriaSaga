@@ -40,6 +40,8 @@ public class PacketManager
         maHandler.Add((ushort)PacketID.STC_DespawnProjectileAt, PacketHandler.STC_DespawnProjectileAtHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Move, MakePacket<STC_Move>);
         maHandler.Add((ushort)PacketID.STC_Move, PacketHandler.STC_MoveHandler);
+        maMakePacketJob.Add((ushort)PacketID.STC_Idle, MakePacket<STC_Idle>);
+        maHandler.Add((ushort)PacketID.STC_Idle, PacketHandler.STC_IdleHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Turn, MakePacket<STC_Turn>);
         maHandler.Add((ushort)PacketID.STC_Turn, PacketHandler.STC_TurnHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_FixPosition, MakePacket<STC_FixPosition>);

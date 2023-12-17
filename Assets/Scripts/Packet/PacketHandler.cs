@@ -84,7 +84,22 @@ internal class PacketHandler
         if (unitSoul == null) return;
 
         unitSoul.TargetPosition = new Vector3(movePacket.positionX, movePacket.positionY, movePacket.positionZ);
+        unitSoul.LookingDirection = new Vector3(movePacket.directionX, 0, movePacket.directionZ);
         unitSoul.ChangeState(unitSoul.States[(int)UnitState.Move]);
+    }
+
+    public static void STC_IdleHandler(PacketSession session, IPacket packet)
+    {
+        STC_Idle idlePacket = packet as STC_Idle;
+
+        GameObject unit = UnitManager.Instance.SearchById(idlePacket.GameObjectId);
+        if (unit == null) return;
+
+        UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
+        if (unitSoul == null) return;
+
+        unitSoul.LookingDirection = new Vector3(idlePacket.directionX, 0, idlePacket.directionZ);
+        unitSoul.ChangeState(unitSoul.States[(int)UnitState.Idle]);
     }
 
     public static void STC_TurnHandler(PacketSession session, IPacket packet)

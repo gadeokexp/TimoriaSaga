@@ -16,7 +16,19 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     private Animator animator;
 
     // 이동과 회전
+    public Vector3 LookingDirection { 
+        get => _lookingDirection; 
+        set 
+        { 
+            if(_lookingDirection.x != value.x || _lookingDirection.z != value.z)
+            {
+                _isDirectionChanged = true;
+                _lookingDirection = value;
+            }
+        }
+    }
     Vector3 _lookingDirection;
+    bool _isDirectionChanged = false;
     Coroutine _rotationTolook;
 
     public Vector3 TargetPosition;
@@ -95,6 +107,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnMoveExit()
     {
+        if (!isMyCharacter)
+        {
+            StartCoroutine(ClearPosition());
+        }
+
         currentState = null;
     }
 
@@ -105,7 +122,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     void OnMoveUpdate()
     {
         float deltaTime = Time.deltaTime;
-       
 
         if (isMyCharacter)
         {
@@ -147,14 +163,19 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
         else
         {
-            _moveInterval += deltaTime *20; // 0.067초에 한번씩 패킷을 주거나 이동처리를 한다
-
             // 내캐릭이 아닌경우 서버의 오더에 따라 이동
+            _moveInterval += deltaTime *20;
+
             if ( _moveRoute != TargetPosition)
             {
                 _moveRoute = TargetPosition;
                 _moveStart = transform.position;
                 _moveInterval = deltaTime * 20;
+            }
+
+            if (_isDirectionChanged && _rotationTolook == null)
+            {
+                _rotationTolook = StartCoroutine(RotationtoLook());
             }
 
             if (_moveInterval < 1f)
@@ -165,7 +186,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             {
                 transform.position = _moveRoute;
             }
-
         }
     }
 
@@ -177,6 +197,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             _diagonalMovementDelta = 0.1f;
         }
 
+        SendIdlePacket();
         animator.SetInteger("currentState", (int)UnitState.Idle);
     }
 
@@ -221,7 +242,37 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             transform.rotation = Quaternion.Lerp(transform.rotation, lookingDirectionAngle, accumulatedDelta);
             yield return null;
         }
+
+        if(!isMyCharacter) _isDirectionChanged = false;
     }
+
+    IEnumerator ClearPosition()
+    {
+        while (true)
+        {
+            float deltaTime = Time.deltaTime;
+            // 내캐릭이 아닌경우 서버의 오더에 따라 이동
+            _moveInterval += deltaTime * 20;
+
+            if (_moveRoute != TargetPosition)
+            {
+                _moveRoute = TargetPosition;
+                _moveStart = transform.position;
+                _moveInterval = deltaTime * 20;
+            }
+
+            if (_moveInterval < 1f)
+            {
+                transform.position = Vector3.Lerp(_moveStart, _moveRoute, _moveInterval);
+            }
+            else
+            {
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
 
     IEnumerator WaitForSwing()
     {
@@ -240,6 +291,16 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             movePacket.timeStamp = 33333333;
 
             NetworkManager.Instance.Send(movePacket.Write());
+    }
+
+    protected void SendIdlePacket()
+    {
+        CTS_Idle idlePacket = new CTS_Idle();
+        idlePacket.directionX = _lookingDirection.x;
+        idlePacket.directionZ = _lookingDirection.z;
+        idlePacket.timeStamp = 33333333;
+
+        NetworkManager.Instance.Send(idlePacket.Write());
     }
 
 }
