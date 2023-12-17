@@ -342,6 +342,8 @@ public class STC_Spawn : IPacket
 		public float positionX;
 		public float positionY;
 		public float positionZ;
+		public float directionX;
+		public float directionZ;
 		public float speed;
 		public int state;
 	
@@ -362,6 +364,12 @@ public class STC_Spawn : IPacket
 			count += sizeof(float);
 			
 			this.positionZ = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(float);
+			
+			this.directionX = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(float);
+			
+			this.directionZ = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
 			count += sizeof(float);
 			
 			this.speed = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
@@ -393,6 +401,12 @@ public class STC_Spawn : IPacket
 			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.positionZ);
 			count += sizeof(float);
 			
+			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.directionX);
+			count += sizeof(float);
+			
+			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.directionZ);
+			count += sizeof(float);
+			
 			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.speed);
 			count += sizeof(float);
 			
@@ -408,6 +422,8 @@ public class STC_Spawn : IPacket
 	
 	        entityLength += sizeof(int);
 			entityLength += 2 + (ushort)Encoding.Unicode.GetByteCount(this.GameObjectName.AsSpan());
+			entityLength += sizeof(float);
+			entityLength += sizeof(float);
 			entityLength += sizeof(float);
 			entityLength += sizeof(float);
 			entityLength += sizeof(float);
@@ -487,6 +503,8 @@ public class STC_UnitSpawn : IPacket
 		public float positionX;
 		public float positionY;
 		public float positionZ;
+		public float directionX;
+		public float directionZ;
 		public int maxHp;
 		public int hp;
 		public float speed;
@@ -509,6 +527,12 @@ public class STC_UnitSpawn : IPacket
 			count += sizeof(float);
 			
 			this.positionZ = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(float);
+			
+			this.directionX = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(float);
+			
+			this.directionZ = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
 			count += sizeof(float);
 			
 			this.maxHp = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
@@ -546,6 +570,12 @@ public class STC_UnitSpawn : IPacket
 			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.positionZ);
 			count += sizeof(float);
 			
+			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.directionX);
+			count += sizeof(float);
+			
+			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.directionZ);
+			count += sizeof(float);
+			
 			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.maxHp);
 			count += sizeof(int);
 			
@@ -567,6 +597,8 @@ public class STC_UnitSpawn : IPacket
 	
 	        entityLength += sizeof(int);
 			entityLength += 2 + (ushort)Encoding.Unicode.GetByteCount(this.GameObjectName.AsSpan());
+			entityLength += sizeof(float);
+			entityLength += sizeof(float);
 			entityLength += sizeof(float);
 			entityLength += sizeof(float);
 			entityLength += sizeof(float);

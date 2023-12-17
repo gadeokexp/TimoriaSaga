@@ -12,13 +12,14 @@ public class UnitManager : Singleton<UnitManager>
         //SpawnUnit(true, 0, 5, 0);
     }
 
-    public void SpawnUnit(bool isMyCharacter, int Id, float x, float y, float z)
+    public void SpawnUnit(bool isMyCharacter,int Id, Vector3 position, Vector3 rotation)
     {
         // 첫번째 플레이어
         GameObject player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
 
         //player.transform.position = Vector3.up * 5;
-        player.transform.position = new Vector3(x, y, z);
+        player.transform.position = position;
+        player.transform.rotation = Quaternion.LookRotation(rotation);
 
         // 리지드 바디
         Rigidbody rigid = player.AddComponent<Rigidbody>();
@@ -44,7 +45,6 @@ public class UnitManager : Singleton<UnitManager>
         {
             _otherPlayers.Add(Id, player);
         }
-
     }
 
     public Transform GetCameraTarget()

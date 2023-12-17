@@ -8,7 +8,8 @@ internal class PacketHandler
     {
         STC_EnterField enterPacket = packet as STC_EnterField;
 
-        UnitManager.Instance.SpawnUnit(true, enterPacket.GameObjectId, enterPacket.positionX, enterPacket.positionY, enterPacket.positionZ);
+        Vector3 position = new Vector3(enterPacket.positionX, enterPacket.positionY, enterPacket.positionZ);
+        UnitManager.Instance.SpawnUnit(true, enterPacket.GameObjectId, position, Vector3.back);
     }
 
     public static void STC_LeaveFieldHandler(PacketSession session, IPacket packet)
@@ -33,7 +34,10 @@ internal class PacketHandler
 
         foreach (STC_UnitSpawn.GameObject objectInfo in spawnPacket.gameObjects)
         {
-            UnitManager.Instance.SpawnUnit(false, objectInfo.GameObjectId, objectInfo.positionX, objectInfo.positionY, objectInfo.positionZ);
+            Vector3 position = new Vector3(objectInfo.positionX, objectInfo.positionY, objectInfo.positionZ);
+            Vector3 rotation = new Vector3(objectInfo.directionX, 0, objectInfo.directionZ);
+
+            UnitManager.Instance.SpawnUnit(false, objectInfo.GameObjectId, position, rotation);
         }
     }
 

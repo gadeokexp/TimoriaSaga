@@ -36,7 +36,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     UsedInput _input;
 
     // 대각 이동
-    float _diagonalMovementDelta = 0;
+    float _diagonalMovementDelta = 0.1f;
     float _prevDiagonalX = 0;
     float _prevDiagonalZ = 0;
 
@@ -217,6 +217,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         float accumulatedDelta = 0;
         Vector3 lookingDirection = _lookingDirection;
         Quaternion lookingDirectionAngle = Quaternion.LookRotation(lookingDirection);
+        transform.rotation = lookingDirectionAngle; 
 
         while (true)
         {
