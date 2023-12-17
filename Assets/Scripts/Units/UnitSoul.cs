@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Scripting;
+using UnityEngine.UIElements;
 using UnityEngine.Windows;
 
 public class UnitSoul : UnitStateAgent<UnitSoul>
@@ -13,12 +15,15 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     private Animator animator;
 
+    // 이동과 회전
     Vector3 _lookingDirection;
     Coroutine _rotationTolook;
 
+    public Vector3 TargetPosition;
+
     UsedInput _input;
 
-    // 대각 이동에 관한 키보드입력 보정처리
+    // 대각 이동
     float _diagonalMovementDelta = 0;
     float _prevDiagonalX = 0;
     float _prevDiagonalZ = 0;
@@ -48,6 +53,14 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         animator = GetComponent<Animator>();
     }
 
+    void Update()
+    {
+        if (currentState != null && currentState.Update != null)
+        {
+            currentState.Update();
+        }
+    }
+
     void OnInput(ref UsedInput input)
     {
         if (input.Function1 && currentState != states[(int)UnitState.Hit])
@@ -67,20 +80,17 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             // 아무 키도 안눌렸으면 아이들 상태로 전환한다.
             ChangeState(states[(int)UnitState.Idle]);
         }
-
-        if (currentState != null && currentState.Update != null)
-        {
-            currentState.Update();
-        }
     }
 
     void OnMoveEnter()
     {
         animator.SetInteger("currentState", (int)UnitState.Move);
-        _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
-        _rotationTolook = StartCoroutine(RotationtoLook());
 
-        
+        if (_input != null)
+        {
+            _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
+            _rotationTolook = StartCoroutine(RotationtoLook());
+        }
     }
 
     void OnMoveExit()
@@ -88,14 +98,21 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         currentState = null;
     }
 
-    float _movePacketInterval = 0.05f;
+    float _moveInterval = 1f;
+    Vector3 _moveRoute = Vector3.zero;
+    Vector3 _moveStart = Vector3.zero;
 
     void OnMoveUpdate()
     {
         float deltaTime = Time.deltaTime;
+       
 
-        if(isMyCharacter)
+        if (isMyCharacter)
         {
+            _moveInterval += deltaTime * 20; // 0.05초에 한번씩 패킷을 주거나 이동처리를 한다
+
+            // 키보드로 대각 방향이동 후 감도가 너무 높아서 대각으로 안선다.
+            // 감도를 줄이기 위한 코드
             if (_input.XInput != 0f && _input.ZInput != 0f)
             {
                 _prevDiagonalX = _input.XInput;
@@ -107,6 +124,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
                 _diagonalMovementDelta += deltaTime;
             }
 
+            // 이동방향이 바뀐경우 회선 처리
             if (_input.DirectionChanged)
             {
                 _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
@@ -116,19 +134,38 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
                     _rotationTolook = StartCoroutine(RotationtoLook());
                 }
             }
+
+            // 키보드 이동
+            transform.position += _lookingDirection * deltaTime * 3;
+
+            // 이동 보고
+            if (_moveInterval > 1f)
+            {
+                SendMovePacket();
+                _moveInterval = 0f;
+            }
         }
         else
         {
+            _moveInterval += deltaTime *20; // 0.067초에 한번씩 패킷을 주거나 이동처리를 한다
 
-        }
+            // 내캐릭이 아닌경우 서버의 오더에 따라 이동
+            if ( _moveRoute != TargetPosition)
+            {
+                _moveRoute = TargetPosition;
+                _moveStart = transform.position;
+                _moveInterval = deltaTime * 20;
+            }
 
-        transform.position += _lookingDirection * deltaTime * 3;
-        _movePacketInterval -= deltaTime;
+            if (_moveInterval < 1f)
+            {
+                transform.position = Vector3.Lerp(_moveStart, _moveRoute, _moveInterval);
+            }
+            else
+            {
+                transform.position = _moveRoute;
+            }
 
-        if (_movePacketInterval < 0)
-        {
-            SendMovePacket();
-            _movePacketInterval = 0.05f;
         }
     }
 

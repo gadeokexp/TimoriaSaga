@@ -62,4 +62,11 @@ public class UnitManager : Singleton<UnitManager>
             ResourceManager.Instance.DespawnObject(unit.gameObject);
         }
     }
+
+    public GameObject SearchById(int id)
+    {
+        GameObject obj = null;
+        _otherPlayers.TryGetValue(id, out obj);
+        return obj;
+    }
 }

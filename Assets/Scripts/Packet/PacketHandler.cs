@@ -75,8 +75,16 @@ internal class PacketHandler
 
     public static void STC_MoveHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
+        STC_Move movePacket = packet as STC_Move;
+
+        GameObject unit = UnitManager.Instance.SearchById(movePacket.GameObjectId);
+        if (unit == null) return;
+
+        UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
+        if (unitSoul == null) return;
+
+        unitSoul.TargetPosition = new Vector3(movePacket.positionX, movePacket.positionY, movePacket.positionZ);
+        unitSoul.ChangeState(unitSoul.States[(int)UnitState.Move]);
     }
 
     public static void STC_TurnHandler(PacketSession session, IPacket packet)

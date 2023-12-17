@@ -21,6 +21,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
 {
     protected FiniteState<T> currentState;
     protected FiniteState<T>[] states;
+    public FiniteState<T>[] States => states;
     
     public void StateInit(T owner)
     {
@@ -119,7 +120,7 @@ public class HitState<T> : FiniteState<T> where T : class
 
     private void EnterBase()
     {
-        Debug.Log("aaa");
+        // 이렇게 기본 Enter함수 외에 추가 함수를 붙일 수 있다
     }
 }
 
