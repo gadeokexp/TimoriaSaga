@@ -65,7 +65,7 @@ public enum CREATURE_STATE
 public enum SKILL_TYPE
 {
     SKILL_NONE,
-    SKILL_AUTO,
+    SKILL_MELEE,
     SKILL_PROJECTILE,
 }
 
@@ -1251,6 +1251,40 @@ public class STC_FixPosition : IPacket
 public class CTS_Skill : IPacket
 {
     public int skillId;
+	
+	public struct Target
+	{
+	    public int GameObjectId;
+	
+	    public void Read(ReadOnlySpan<byte> readSpan, ref ushort count)
+	    {
+	        this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(int);
+			
+	    }
+	
+	    public bool Write(Span<byte> span, ref ushort count)
+	    {
+	        // 인자로 들어온 Span은 전체의 넓은 버퍼를 의미
+	        bool serializeFlag = true;
+	        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
+			count += sizeof(int);
+			
+	        return serializeFlag;
+	    }
+	
+	    public int GetLength()
+	    {
+	        int entityLength = 0;
+	
+	        entityLength += sizeof(int);
+	
+	        return entityLength;
+	    }
+	}
+	
+	public List<Target> targets = new List<Target>();
+	
     public ushort Protocol { get { return (ushort)PacketID.CTS_Skill; } }
 
     public void Read(ArraySegment<byte> segment)
@@ -1264,6 +1298,17 @@ public class CTS_Skill : IPacket
         this.skillId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
 		count += sizeof(int);
 		
+		targets.Clear();
+		ushort targetLength = BitConverter.ToUInt16(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(ushort);
+		
+		for(int i = 0; i<targetLength; i++)
+		{
+		    Target target = new Target();
+		    target.Read(readSpan, ref count);
+		    targets.Add(target);
+		}
+		
     }
 
     public ArraySegment<byte> Write()
@@ -1271,6 +1316,13 @@ public class CTS_Skill : IPacket
         // 4는 패킷 해더 길이값(ushort) + ID(ushort) 속도를 생각해서 4로 넣음
         int packetLength = 4;
         packetLength += sizeof(int);
+
+        packetLength += 2;
+        foreach (Target target in this.targets)
+        {
+	        packetLength += target.GetLength();
+        }
+
         ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
         ushort count = 0;
         bool serializeFlag = true;
@@ -1284,6 +1336,12 @@ public class CTS_Skill : IPacket
         serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.skillId);
 		count += sizeof(int);
 		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)targets.Count);
+		count += sizeof(ushort);
+		
+		foreach (Target target in this.targets)
+		    serializeFlag &= target.Write(span, ref count);
+		
         serializeFlag &= BitConverter.TryWriteBytes(span, count);
 
         if (serializeFlag == false) return null;
@@ -1293,8 +1351,42 @@ public class CTS_Skill : IPacket
 }
 public class STC_Skill : IPacket
 {
-    public int GameObjectId;
-	public int skillId;
+    public int skillId;
+	public int GameObjectId;
+	
+	public struct Target
+	{
+	    public int GameObjectId;
+	
+	    public void Read(ReadOnlySpan<byte> readSpan, ref ushort count)
+	    {
+	        this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(int);
+			
+	    }
+	
+	    public bool Write(Span<byte> span, ref ushort count)
+	    {
+	        // 인자로 들어온 Span은 전체의 넓은 버퍼를 의미
+	        bool serializeFlag = true;
+	        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
+			count += sizeof(int);
+			
+	        return serializeFlag;
+	    }
+	
+	    public int GetLength()
+	    {
+	        int entityLength = 0;
+	
+	        entityLength += sizeof(int);
+	
+	        return entityLength;
+	    }
+	}
+	
+	public List<Target> targets = new List<Target>();
+	
     public ushort Protocol { get { return (ushort)PacketID.STC_Skill; } }
 
     public void Read(ArraySegment<byte> segment)
@@ -1305,11 +1397,22 @@ public class STC_Skill : IPacket
         count += sizeof(ushort);
         count += sizeof(ushort);
 
-        this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+        this.skillId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
 		count += sizeof(int);
 		
-		this.skillId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+		this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
 		count += sizeof(int);
+		
+		targets.Clear();
+		ushort targetLength = BitConverter.ToUInt16(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(ushort);
+		
+		for(int i = 0; i<targetLength; i++)
+		{
+		    Target target = new Target();
+		    target.Read(readSpan, ref count);
+		    targets.Add(target);
+		}
 		
     }
 
@@ -1319,6 +1422,13 @@ public class STC_Skill : IPacket
         int packetLength = 4;
         packetLength += sizeof(int);
         packetLength += sizeof(int);
+
+        packetLength += 2;
+        foreach (Target target in this.targets)
+        {
+	        packetLength += target.GetLength();
+        }
+
         ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
         ushort count = 0;
         bool serializeFlag = true;
@@ -1329,11 +1439,17 @@ public class STC_Skill : IPacket
         serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.STC_Skill);
         count += sizeof(ushort);
 
-        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.skillId);
 		count += sizeof(int);
 		
-		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.skillId);
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
 		count += sizeof(int);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)targets.Count);
+		count += sizeof(ushort);
+		
+		foreach (Target target in this.targets)
+		    serializeFlag &= target.Write(span, ref count);
 		
         serializeFlag &= BitConverter.TryWriteBytes(span, count);
 

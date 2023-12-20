@@ -52,7 +52,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
         if (currentState != null)
         {
             // 현상태와 바뀌는 상태가 같을경우 여기서 처리해주자
-            if(!currentState.isTransforable(newState.ID))
+            if (!currentState.isTransforable(newState.ID))
             {
                 return;
             }
@@ -62,7 +62,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
                 currentState.Exit();
             }
         }
-
+        
         currentState = newState;
 
         if (currentState.Enter != null)
@@ -112,6 +112,7 @@ public class HitState<T> : FiniteState<T> where T : class
 
         //transferableState.Add((int)UnitState.Idle);
         //transferableState.Add((int)UnitState.Move);
+        //transferableState.Add((int)UnitState.Hit);
         transferableState.Add((int)UnitState.Beaten);
         transferableState.Add((int)UnitState.Die);
 

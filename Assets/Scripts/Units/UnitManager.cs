@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -8,6 +9,8 @@ public class UnitManager : Singleton<UnitManager>
 {
     public GameObject Player => _player;
     GameObject _player = null;
+    public int _playerID;
+    public int PlayerID => _playerID;
 
     public Action SetCamreaSlot;
 
@@ -46,6 +49,7 @@ public class UnitManager : Singleton<UnitManager>
         if (isMyCharacter)
         {
             _player = player;
+            _playerID = Id;
             if (SetCamreaSlot != null) SetCamreaSlot.Invoke();
         }
         else
@@ -70,5 +74,15 @@ public class UnitManager : Singleton<UnitManager>
         GameObject obj = null;
         _otherPlayers.TryGetValue(id, out obj);
         return obj;
+    }
+
+    public List<GameObject> GetOtherPlayers()
+    {
+        return _otherPlayers.Values.ToList<GameObject>();
+    }
+
+    public List<int> GetOtherPlayerIDs()
+    {
+        return _otherPlayers.Keys.ToList<int>();
     }
 }

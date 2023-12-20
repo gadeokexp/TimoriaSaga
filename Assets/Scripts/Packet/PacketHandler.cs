@@ -114,8 +114,19 @@ internal class PacketHandler
 
     public static void STC_SkillHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
+        STC_Skill skillPacket = packet as STC_Skill;
+
+        if (skillPacket.GameObjectId != UnitManager.Instance.PlayerID)
+        {
+            Debug.Log("1");
+            GameObject unit = UnitManager.Instance.SearchById(skillPacket.GameObjectId);
+            Debug.Log("2");
+            UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
+            Debug.Log("3");
+            if (unitSoul == null) return;
+            Debug.Log("4");
+            unitSoul.ChangeState(unitSoul.States[(int)UnitState.Hit]);
+        }        
     }
 
     public static void STC_ConnectedHandler(PacketSession session, IPacket packet)

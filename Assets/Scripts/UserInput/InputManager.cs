@@ -37,8 +37,8 @@ public class InputManager : MonoSingleton<InputManager>
             _input.XInput = Input.GetAxisRaw("Horizontal");
             _input.ZInput = Input.GetAxisRaw("Vertical");
             _input.Jump = Input.GetButtonDown("Jump");
-            _input.Function1 = Input.GetButtonDown("Fire1");
-            _input.Function2 = Input.GetButtonDown("Fire2");
+            _input.Function1 = Input.GetButton("Fire1");
+            _input.Function2 = Input.GetButton("Fire2");
 
             if(_prevXInput != _input.XInput || _prevZInput != _input.ZInput)
             {

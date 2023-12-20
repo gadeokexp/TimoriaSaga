@@ -75,7 +75,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnInput(ref UsedInput input)
     {
-        if (input.Function1 && currentState != states[(int)UnitState.Hit])
+        if (input.Function1)
         {
             // 입력 대응 1순위
             // 공격키가 눌렸고 현재 공격상태가 아니면 공격상태로 전환한다.
@@ -90,6 +90,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         else
         {
             // 아무 키도 안눌렸으면 아이들 상태로 전환한다.
+            // 이미 아이들 상태이면 전환되지 않는다.
             ChangeState(states[(int)UnitState.Idle]);
         }
     }
@@ -198,13 +199,33 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
 
         SendIdlePacket();
+
         animator.SetInteger("currentState", (int)UnitState.Idle);
     }
 
     void OnHitEnter()
     {
-        animator.SetInteger("currentState", (int)UnitState.Hit);
-        StartCoroutine(WaitForSwing());
+        if(isMyCharacter)
+        {
+            SendSkillPacket();
+            StartCoroutine(WaitForSwing(0.6f));
+        }
+        else
+        {
+            StartCoroutine(WaitForSwing(0.3f));
+            currentState = null;
+        }
+
+        int currentMotion = animator.GetInteger("currentState");
+
+        if (currentMotion == 2)
+        {
+            animator.SetInteger("currentState", 201);
+        }
+        else
+        {
+            animator.SetInteger("currentState", (int)UnitState.Hit);
+        }
     }
 
     void OnHitExit()
@@ -275,23 +296,23 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     }
 
 
-    IEnumerator WaitForSwing()
+    IEnumerator WaitForSwing(float term)
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(term);
         currentState = null;
     }
 
     protected void SendMovePacket()
     {
-            CTS_Move movePacket = new CTS_Move();
-            movePacket.positionX = transform.position.x;
-            movePacket.positionY = transform.position.y;
-            movePacket.positionZ = transform.position.z;
-            movePacket.directionX = _lookingDirection.x;
-            movePacket.directionZ = _lookingDirection.z;
-            movePacket.timeStamp = 33333333;
+        CTS_Move movePacket = new CTS_Move();
+        movePacket.positionX = transform.position.x;
+        movePacket.positionY = transform.position.y;
+        movePacket.positionZ = transform.position.z;
+        movePacket.directionX = _lookingDirection.x;
+        movePacket.directionZ = _lookingDirection.z;
+        movePacket.timeStamp = 33333333;
 
-            NetworkManager.Instance.Send(movePacket.Write());
+        NetworkManager.Instance.Send(movePacket.Write());
     }
 
     protected void SendIdlePacket()
@@ -304,4 +325,18 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         NetworkManager.Instance.Send(idlePacket.Write());
     }
 
+    protected void SendSkillPacket()
+    {
+        CTS_Skill skillPacket = new CTS_Skill();
+        skillPacket.skillId = (int)SKILL_TYPE.SKILL_MELEE;
+
+        List<int> unitlist = UnitManager.Instance.GetOtherPlayerIDs();
+
+        foreach (int otherUnit in unitlist)
+        {
+            skillPacket.targets.Add(new CTS_Skill.Target() { GameObjectId = otherUnit });
+        }
+        
+        NetworkManager.Instance.Send(skillPacket.Write());
+    }
 }
