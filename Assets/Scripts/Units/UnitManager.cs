@@ -35,7 +35,8 @@ public class UnitManager : Singleton<UnitManager>
 
         // 소울
         UnitSoul soul = player.AddComponent<UnitSoul>();
-        soul.isMyCharacter = isMyCharacter;        
+        soul.isMyCharacter = isMyCharacter;
+        soul.ID = Id;
 
         // 충돌체
         CapsuleCollider cc = player.AddComponent<CapsuleCollider>();
@@ -43,8 +44,16 @@ public class UnitManager : Singleton<UnitManager>
         cc.radius = 0.5f;
         cc.center = new Vector3(0, 0.9f, 0);
 
+        // 유닛끼리만 사용하는 트리거 충돌체
+        CapsuleCollider uc = player.AddComponent<CapsuleCollider>();
+        uc.height = 1.88f;
+        uc.radius = 0.5f;
+        uc.center = new Vector3(0, 0.9f, 0);
+        uc.isTrigger = true;
+        uc.includeLayers = 1 << 6; // Unit 레이어 설정
+
         // 부딪치고 회전하는거 방지
-        rigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rigid.constraints |= RigidbodyConstraints.FreezeRotation;
 
         if (isMyCharacter)
         {

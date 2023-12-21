@@ -21,14 +21,15 @@ public enum PacketID
 	STC_FixPosition = 13,
 	CTS_Skill = 14,
 	STC_Skill = 15,
-	STC_ChangeHp = 16,
-	STC_Die = 17,
-	CTS_Die = 18,
-	STC_Connected = 19,
-	CTS_RequestLogin = 20,
-	STC_PermitLogin = 21,
-	CTS_CreatNewUnit = 22,
-	STC_ResponseCreatNewUnit = 23,
+	STC_Beaten = 16,
+	STC_ChangeHp = 17,
+	STC_Die = 18,
+	CTS_Die = 19,
+	STC_Connected = 20,
+	CTS_RequestLogin = 21,
+	STC_PermitLogin = 22,
+	CTS_CreatNewUnit = 23,
+	STC_ResponseCreatNewUnit = 24,
 	
 }
 
@@ -1353,6 +1354,59 @@ public class STC_Skill : IPacket
 {
     public int skillId;
 	public int GameObjectId;
+    public ushort Protocol { get { return (ushort)PacketID.STC_Skill; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> readSpan = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+
+        this.skillId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(int);
+		
+		this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(int);
+		
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        // 4는 패킷 해더 길이값(ushort) + ID(ushort) 속도를 생각해서 4로 넣음
+        int packetLength = 4;
+        packetLength += sizeof(int);
+        packetLength += sizeof(int);
+        ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
+        ushort count = 0;
+        bool serializeFlag = true;
+
+        Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.STC_Skill);
+        count += sizeof(ushort);
+
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.skillId);
+		count += sizeof(int);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
+		count += sizeof(int);
+		
+        serializeFlag &= BitConverter.TryWriteBytes(span, count);
+
+        if (serializeFlag == false) return null;
+
+        return segment;
+    }
+}
+public class STC_Beaten : IPacket
+{
+    public int skillId;
+	public int GameObjectId;
+	public float directionX;
+	public float directionZ;
 	
 	public struct Target
 	{
@@ -1387,7 +1441,7 @@ public class STC_Skill : IPacket
 	
 	public List<Target> targets = new List<Target>();
 	
-    public ushort Protocol { get { return (ushort)PacketID.STC_Skill; } }
+    public ushort Protocol { get { return (ushort)PacketID.STC_Beaten; } }
 
     public void Read(ArraySegment<byte> segment)
     {
@@ -1402,6 +1456,12 @@ public class STC_Skill : IPacket
 		
 		this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
 		count += sizeof(int);
+		
+		this.directionX = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(float);
+		
+		this.directionZ = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(float);
 		
 		targets.Clear();
 		ushort targetLength = BitConverter.ToUInt16(readSpan.Slice(count, readSpan.Length - count));
@@ -1422,6 +1482,8 @@ public class STC_Skill : IPacket
         int packetLength = 4;
         packetLength += sizeof(int);
         packetLength += sizeof(int);
+        packetLength += sizeof(float);
+        packetLength += sizeof(float);
 
         packetLength += 2;
         foreach (Target target in this.targets)
@@ -1436,7 +1498,7 @@ public class STC_Skill : IPacket
         Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);
 
         count += sizeof(ushort);
-        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.STC_Skill);
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.STC_Beaten);
         count += sizeof(ushort);
 
         serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.skillId);
@@ -1444,6 +1506,12 @@ public class STC_Skill : IPacket
 		
 		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
 		count += sizeof(int);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.directionX);
+		count += sizeof(float);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.directionZ);
+		count += sizeof(float);
 		
 		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)targets.Count);
 		count += sizeof(ushort);

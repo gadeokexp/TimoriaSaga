@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -12,6 +13,9 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 {
     [SerializeField]
     public bool isMyCharacter = true;
+    Dictionary<int, Collider> _myCharactersCollision;
+
+    public int ID = 0;
 
     private Animator animator;
 
@@ -56,10 +60,16 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         hitState.Enter += OnHitEnter;
         hitState.Exit += OnHitExit;
 
+        BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
+        beatenState.Enter += OnBeatenEnter;
+        beatenState.Exit += OnBeatenExit;
+
         if (isMyCharacter)
         {
             InputManager.Instance.OnInput += OnInput;
             _input = InputManager.Instance.GameInput;
+
+            _myCharactersCollision = new Dictionary<int, Collider>();
         }
 
         animator = GetComponent<Animator>();
@@ -151,9 +161,14 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
                     _rotationTolook = StartCoroutine(RotationtoLook());
                 }
             }
+            //float conTheta = _CollisionDirection.x * _lookingDirection.x + _CollisionDirection.z * _lookingDirection.z;
 
-            // 키보드 이동
-            transform.position += _lookingDirection * deltaTime * 3;
+            if(CheckCollions())
+            {
+                // 키보드 이동
+                //transform.position += (_lookingDirection - _CollisionDirection * conTheta) * deltaTime * 3;
+                transform.position += (_lookingDirection - _fixedDirection) * deltaTime * 3;
+            }
 
             // 이동 보고
             if (_moveInterval > 1f)
@@ -198,7 +213,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             _diagonalMovementDelta = 0.1f;
         }
 
-        SendIdlePacket();
+        if(isMyCharacter)
+        {
+            _myCharactersCollision.Clear();
+            SendIdlePacket();
+        }
 
         animator.SetInteger("currentState", (int)UnitState.Idle);
     }
@@ -233,12 +252,39 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         currentState = null;
     }
 
+    void OnBeatenEnter()
+    {
+        if(currentState.ID == (int)UnitState.Beaten)
+        {
+            animator.Play("GetHit_SwordShield");
+        }
+        else
+        {
+            animator.SetInteger("currentState", (int)UnitState.Beaten);
+        }
+
+        BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
+        _lookingDirection = new Vector3(beatenState.BeatenDirectionX, 0, beatenState.BeatenDirectionZ).normalized;
+
+        if (_rotationTolook == null)
+        {
+            _rotationTolook = StartCoroutine(RotationtoLook());
+        }
+
+        StartCoroutine(WaitForBeaten(0.2f));
+    }
+
+    void OnBeatenExit()
+    {
+        currentState = null;
+    }
+
     IEnumerator RotationtoLook()
     {
         float accumulatedDelta = 0;
         Vector3 lookingDirection = _lookingDirection;
         Quaternion lookingDirectionAngle = Quaternion.LookRotation(lookingDirection);
-        transform.rotation = lookingDirectionAngle; 
+        //transform.rotation = lookingDirectionAngle; 
 
         while (true)
         {
@@ -295,8 +341,13 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
     }
 
-
     IEnumerator WaitForSwing(float term)
+    {
+        yield return new WaitForSeconds(term);
+        currentState = null;
+    }
+
+    IEnumerator WaitForBeaten(float term)
     {
         yield return new WaitForSeconds(term);
         currentState = null;
@@ -338,5 +389,105 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
         
         NetworkManager.Instance.Send(skillPacket.Write());
+    }
+
+    Vector3 _fixedDirection;
+
+    private bool CheckCollions()
+    {
+        float cosTheta = 0;
+
+        _fixedDirection = Vector3.zero;
+
+        var collList = _myCharactersCollision.Values;
+
+        foreach (var coll in collList)
+        {
+            UnitSoul soul = coll.gameObject.GetComponent<UnitSoul>();
+
+            Vector3 diff = coll.transform.position - transform.position; // 나중에 고도가 생기면 수정해야 한다.
+
+            Vector3 diffUnit = diff.normalized;
+
+            if(soul != null)
+            {
+                float tempTheta = diffUnit.x * _lookingDirection.x + diffUnit.z * _lookingDirection.z;
+
+                if (tempTheta > 0)
+                {
+                    if (cosTheta > 0)
+                    {
+                        // 충돌상황이 2개 이상이며 이 두 원충돌체쪽으로 밀고 있다.
+                        // 어느쪽으로도 움직일수 없는 상황, 사이에 낀 상황
+                        // 안움직이면 된다.
+                        return false;
+                    }
+                    else
+                    {
+                        // 첫번째 충돌상황은 대응가능
+                        // 밀고 들어갈수없으니 옆으로 미끄러지는 상황을 연출하자
+                        cosTheta = tempTheta;
+                        _fixedDirection = diffUnit * cosTheta;
+                    }
+                }
+            }
+        }
+
+        return true; ;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(isMyCharacter&&
+            currentState != null &&
+            currentState.ID == (int)UnitState.Move &&
+            other.gameObject.layer == 6)
+        {
+            //Vector3 diff = other.transform.position - transform.position;
+            //Vector3 unitDiff = diff.normalized;
+
+            UnitSoul otherSoul = other.gameObject.GetComponent<UnitSoul>();
+
+            if(otherSoul != null)
+            {
+                if(!_myCharactersCollision.ContainsKey(otherSoul.ID))
+                {
+                    _myCharactersCollision.Add(otherSoul.ID, other);
+                }
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (isMyCharacter &&
+            currentState != null &&
+            currentState.ID == (int)UnitState.Move &&
+            other.gameObject.layer == 6)
+        {
+            UnitSoul otherSoul = other.gameObject.GetComponent<UnitSoul>();
+
+            if (otherSoul != null)
+            {
+                if (!_myCharactersCollision.ContainsKey(otherSoul.ID))
+                {
+                    _myCharactersCollision.Add(otherSoul.ID, other);
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (isMyCharacter &&
+            other.gameObject.layer == 6)
+        {
+            UnitSoul otherSoul = other.gameObject.GetComponent<UnitSoul>();
+
+            if (otherSoul != null)
+            { 
+                _myCharactersCollision.Remove(otherSoul.ID);
+            }
+        }
     }
 }

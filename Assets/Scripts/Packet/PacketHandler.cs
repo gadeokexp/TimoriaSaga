@@ -118,15 +118,44 @@ internal class PacketHandler
 
         if (skillPacket.GameObjectId != UnitManager.Instance.PlayerID)
         {
-            Debug.Log("1");
-            GameObject unit = UnitManager.Instance.SearchById(skillPacket.GameObjectId);
-            Debug.Log("2");
+            GameObject unit = UnitManager.Instance.SearchById(skillPacket.GameObjectId);   
+
             UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
-            Debug.Log("3");
             if (unitSoul == null) return;
-            Debug.Log("4");
+            
             unitSoul.ChangeState(unitSoul.States[(int)UnitState.Hit]);
         }        
+    }
+
+    public static void STC_BeatenHandler(PacketSession session, IPacket packet)
+    {
+        STC_Beaten beatenPacket = packet as STC_Beaten;
+
+        foreach(var target in beatenPacket.targets)
+        {
+            UnitSoul unitSoul;
+
+            if (target.GameObjectId == UnitManager.Instance.PlayerID)
+            {
+                unitSoul = UnitManager.Instance.Player.GetComponent<UnitSoul>();
+                if (unitSoul == null) continue;
+            }
+            else
+            {
+                GameObject unit = UnitManager.Instance.SearchById(target.GameObjectId);
+
+                unitSoul = unit.GetComponent<UnitSoul>();
+                if (unitSoul == null) continue;
+            }
+
+            BeatenState<UnitSoul>  unitBeatenState = unitSoul.States[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
+            unitBeatenState.AttackkerID = beatenPacket.GameObjectId;
+            unitBeatenState.BeatenDirectionX = -beatenPacket.directionX;
+            unitBeatenState.BeatenDirectionZ = -beatenPacket.directionZ;
+            unitBeatenState.SkillID = beatenPacket.skillId;
+
+            unitSoul.ChangeState(unitSoul.States[(int)UnitState.Beaten]);
+        }
     }
 
     public static void STC_ConnectedHandler(PacketSession session, IPacket packet)

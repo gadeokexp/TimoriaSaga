@@ -48,6 +48,8 @@ public class PacketManager
         maHandler.Add((ushort)PacketID.STC_FixPosition, PacketHandler.STC_FixPositionHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Skill, MakePacket<STC_Skill>);
         maHandler.Add((ushort)PacketID.STC_Skill, PacketHandler.STC_SkillHandler);
+        maMakePacketJob.Add((ushort)PacketID.STC_Beaten, MakePacket<STC_Beaten>);
+        maHandler.Add((ushort)PacketID.STC_Beaten, PacketHandler.STC_BeatenHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_ChangeHp, MakePacket<STC_ChangeHp>);
         maHandler.Add((ushort)PacketID.STC_ChangeHp, PacketHandler.STC_ChangeHpHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Die, MakePacket<STC_Die>);

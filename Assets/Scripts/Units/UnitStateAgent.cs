@@ -110,9 +110,6 @@ public class HitState<T> : FiniteState<T> where T : class
 
         owner = newOwner;
 
-        //transferableState.Add((int)UnitState.Idle);
-        //transferableState.Add((int)UnitState.Move);
-        //transferableState.Add((int)UnitState.Hit);
         transferableState.Add((int)UnitState.Beaten);
         transferableState.Add((int)UnitState.Die);
 
@@ -127,11 +124,19 @@ public class HitState<T> : FiniteState<T> where T : class
 
 public class BeatenState<T> : FiniteState<T> where T : class
 {
+    public int SkillID;
+    public int AttackkerID;
+    public float BeatenDirectionX;
+    public float BeatenDirectionZ;
+
     public BeatenState(T newOwner)
     {
         _id = (int)UnitState.Beaten;
 
         owner = newOwner;
+
+        transferableState.Add((int)UnitState.Beaten);
+        transferableState.Add((int)UnitState.Die);
     }
 }
 
