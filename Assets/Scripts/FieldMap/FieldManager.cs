@@ -7,7 +7,7 @@ public class FieldManager : Singleton<FieldManager>
 {
     Dictionary<Vector3, GameObject> tileDictionary;
 
-    public FieldManager()
+    public void Init()
     {
         tileDictionary = new Dictionary<Vector3, GameObject>();
 

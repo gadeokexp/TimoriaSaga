@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class GameInstance : MonoSingleton<GameInstance>
 {
-    ResourceManager resource;
-    FieldManager map;
-    ContentManager content;
-    InputManager input;
-    UnitManager unit;
+    // 일반 싱글톤
+    ResourceManager _resource;
+    FieldManager _map;
+    ContentManager _content;
+    InputManager _input;
+    UnitManager _unit;
+    UIManager _ui;
 
     // 모노 싱글톤
     NetworkManager network;
 
     protected override void OnStart()
     {
-        resource = ResourceManager.Instance;
-        content = ContentManager.Instance;
-        map = FieldManager.Instance;
-        input = InputManager.Instance;
-        unit = UnitManager.Instance;
+        _resource = ResourceManager.Instance;
+        _content = ContentManager.Instance;
+        _input = InputManager.Instance;
+        _ui = UIManager.Instance;
+        _map = FieldManager.Instance;
+        _unit = UnitManager.Instance;
         network = NetworkManager.Instance;
     }
 }

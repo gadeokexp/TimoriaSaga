@@ -152,31 +152,34 @@ namespace TimoriaSagaNetworkLibrary
             if (Interlocked.Exchange(ref mbDisconnected, 1) == 1)
                 return;
 
-            // 컨텐츠 레이어쪽에(자식 클래스) 이벤트 효과를 만들어준다
-            OnDisconnected(mcSocket.RemoteEndPoint);
+            if (mcSocket != null)
+            {
+                // 컨텐츠 레이어쪽에(자식 클래스) 이벤트 효과를 만들어준다
+                OnDisconnected(mcSocket.RemoteEndPoint);
 
-            //mcReceiveArgs.Completed -= OnReceiveCompleted;
-            //mcSendArgs.Completed -= OnSendCompleted;
+                //mcReceiveArgs.Completed -= OnReceiveCompleted;
+                //mcSendArgs.Completed -= OnSendCompleted;
 
-            mcReceiveArgs.UserToken = null;
-            mcSendArgs.UserToken = null;
+                mcReceiveArgs.UserToken = null;
+                mcSendArgs.UserToken = null;
 
-            mcReceiveArgs.RemoteEndPoint = null;
-            mcSendArgs.RemoteEndPoint = null;
+                mcReceiveArgs.RemoteEndPoint = null;
+                mcSendArgs.RemoteEndPoint = null;
 
-            //mcReceiveArgs.BufferList = null;
-            //mcSendArgs.BufferList = null;
+                //mcReceiveArgs.BufferList = null;
+                //mcSendArgs.BufferList = null;
 
-            //mcReceiveArgs.SetBuffer(null, 0,0);
-            //mcSendArgs.SetBuffer(null,0,0);
+                //mcReceiveArgs.SetBuffer(null, 0,0);
+                //mcSendArgs.SetBuffer(null,0,0);
 
-            mcSocket.Shutdown(SocketShutdown.Both); // 이줄 안넣어도 됨
-            mcSocket.Close();
+                mcSocket.Shutdown(SocketShutdown.Both); // 이줄 안넣어도 됨
+                mcSocket.Close();
 
-            // 샌드큐와, 샌드 데이터 리스트 잔류하는 것들 정리
-            Clear();
+                // 샌드큐와, 샌드 데이터 리스트 잔류하는 것들 정리
+                Clear();
 
-            mcSocket = null;
+                mcSocket = null;
+            }
         }
 
         #region 네트워크 통신 관련

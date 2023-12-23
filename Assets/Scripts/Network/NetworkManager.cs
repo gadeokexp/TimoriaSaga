@@ -11,7 +11,7 @@ public class NetworkManager : MonoSingleton<NetworkManager>
     ClientSideSession mcSession = new ClientSideSession();
     public string UniqueId;
 
-    public void Start()
+    public void Init()
     {
         // 로컬 컴퓨터의 호스트 이름(DNS)을 가져온다.
         // 로컬 DNS 이름 Localhost와 그 IP를 찾는 과정

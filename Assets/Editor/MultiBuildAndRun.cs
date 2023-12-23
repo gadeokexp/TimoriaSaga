@@ -35,8 +35,11 @@ public class MultiBuildAndRun
         EditorUserBuildSettings.SwitchActiveBuildTarget( 
             BuildTargetGroup.Standalone,BuildTarget.StandaloneWindows);
 
+        PlayerSettings.defaultScreenWidth = 1280;
+        PlayerSettings.defaultScreenHeight = 720;
+
         // 정해진 갯수만큼 빌드
-        for(int i = 1; i <= playerCount; i++)
+        for (int i = 1; i <= playerCount; i++)
         {
             // 윈64포맷으로 정해진 갯수만큼 빌드하고 경로와 파일명으로 만든 후 실행시킨다.
             BuildPipeline.BuildPlayer(GetScenePaths(),

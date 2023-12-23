@@ -115,7 +115,7 @@ public abstract class MonoSingleton<T> : MonoSingleton where T : MonoBehaviour
 
                 Debug.Log($"MonoBehaviour Singleton {typeof(T)} is Created");
 
-                return mbInstance = new GameObject($"({nameof(MonoSingleton)}){typeof(T)}").AddComponent<T>();
+                return mbInstance = new GameObject($"{typeof(T)}").AddComponent<T>();
             }
         }
     }

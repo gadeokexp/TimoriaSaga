@@ -10,7 +10,7 @@ public class CameraSoul : MonoBehaviour
     private void Start()
     {
         UnitManager.Instance.SetCamreaSlot = SetCameraTarget;
-        _target = transform;
+        _target = GameInstance.Instance.transform;
     }
     void Update()
     {
