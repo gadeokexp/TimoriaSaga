@@ -2445,7 +2445,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: d14ff87d940cbfa49a3525c3e61a307f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 05ce382cc27c86a41baaa13bc62eddeb, type: 2}
+      objectReference: {fileID: 2100000, guid: 594df9dd598a1b74194670c586c6b7f3, type: 2}
     - target: {fileID: 919132149155446097, guid: d14ff87d940cbfa49a3525c3e61a307f, type: 3}
       propertyPath: m_Name
       value: FxM_SwordSlash_01
