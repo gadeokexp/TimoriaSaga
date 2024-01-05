@@ -14584,50 +14584,14 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.033333335
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.06666667
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.1
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
         time: 0.13333334
         value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.6
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6333333
         value: 0
@@ -14635,8 +14599,8 @@ AnimationClip:
         outSlope: Infinity
         tangentMode: 103
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
         value: 0
@@ -14650,7 +14614,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_IsActive
-    path: root/FxM_SwordSlash_01
+    path: EffectSwordSlash
     classID: 1
     script: {fileID: 0}
     flags: 16
@@ -14679,8 +14643,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.x
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.x
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -14709,8 +14673,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.y
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.y
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -14729,9 +14693,9 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.13333334
-        value: -0.792
-        inSlope: 1.3136842
-        outSlope: 1.3136842
+        value: -1
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -14745,11 +14709,20 @@ AnimationClip:
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.6666667
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.z
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.z
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -14778,8 +14751,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.w
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.w
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -14792,7 +14765,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 319298793
+      path: 2302275861
       attribute: 2086281974
       script: {fileID: 0}
       typeID: 1
@@ -15602,8 +15575,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 319298793
-      attribute: 646366601
+      path: 2302275861
+      attribute: 624475678
       script: {fileID: 0}
       typeID: 23
       customType: 22
@@ -16088,8 +16061,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 319298793
-      attribute: 109495689
+      path: 2302275861
+      attribute: 87604766
       script: {fileID: 0}
       typeID: 23
       customType: 22
@@ -16097,8 +16070,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 319298793
-      attribute: 377931145
+      path: 2302275861
+      attribute: 356040222
       script: {fileID: 0}
       typeID: 23
       customType: 22
@@ -16106,8 +16079,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 319298793
-      attribute: 914802057
+      path: 2302275861
+      attribute: 892911134
       script: {fileID: 0}
       typeID: 23
       customType: 22
@@ -33964,50 +33937,14 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.033333335
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.06666667
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.1
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
         time: 0.13333334
         value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.6
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6333333
         value: 0
@@ -34015,8 +33952,8 @@ AnimationClip:
         outSlope: Infinity
         tangentMode: 103
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
         value: 0
@@ -34030,7 +33967,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_IsActive
-    path: root/FxM_SwordSlash_01
+    path: EffectSwordSlash
     classID: 1
     script: {fileID: 0}
     flags: 16
@@ -34059,8 +33996,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.x
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.x
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -34089,8 +34026,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.y
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.y
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -34109,9 +34046,9 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.13333334
-        value: -0.792
-        inSlope: 1.3136842
-        outSlope: 1.3136842
+        value: -1
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -34125,11 +34062,20 @@ AnimationClip:
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.6666667
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.z
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.z
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
@@ -34158,8 +34104,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._MainTex_ST.w
-    path: root/FxM_SwordSlash_01
+    attribute: material._Texture2D_ST.w
+    path: EffectSwordSlash
     classID: 23
     script: {fileID: 0}
     flags: 16
