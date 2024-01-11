@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2974262337133846805}
   - component: {fileID: -2479960496649665312}
   - component: {fileID: 9124298796519631639}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tile_Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,6 +60,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
