@@ -20,8 +20,9 @@ public class UIManager : Singleton<UIManager>
 
         // Sub UI들 등록
         _subManagerlist.Add((int)ESubUIManagerID.Login, new SubUIManagerLogin());
+        _subManagerlist.Add((int)ESubUIManagerID.Field, new SubUIManageField());
 
-        // 
+        // 시작시 로그인 UI
         if(_subManagerlist.TryGetValue((int)ESubUIManagerID.Login, out CurrentUISubManager))
         {
             CurrentUISubManager.Active();
@@ -32,15 +33,15 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public void ChangeUISubManager(int subUIId)
+    public void ChangeUISubManager(ESubUIManagerID subUIId)
     {
         if(CurrentUISubManager != null)
         {
-            CurrentUISubManager.DeActive();
+            CurrentUISubManager.Deactive();
             CurrentUISubManager = null;
         }    
 
-        if (!_subManagerlist.TryGetValue(subUIId, out CurrentUISubManager))
+        if (!_subManagerlist.TryGetValue((int)subUIId, out CurrentUISubManager))
         {
             Debug.LogError("Sub UI 초기화 실패, 해당 Sub UI가 없음");
         }

@@ -6,7 +6,7 @@ public class GameInstance : MonoSingleton<GameInstance>
 {
     // 일반 싱글톤
     ResourceManager _resource;
-    FieldManager _map;
+    FieldTileManager _map;
     ContentManager _content;
     InputManager _input;
     UnitManager _unit;
@@ -21,7 +21,7 @@ public class GameInstance : MonoSingleton<GameInstance>
         _content = ContentManager.Instance;
         _input = InputManager.Instance;
         _ui = UIManager.Instance;
-        _map = FieldManager.Instance;
+        _map = FieldTileManager.Instance;
         _unit = UnitManager.Instance;
         network = NetworkManager.Instance;
     }

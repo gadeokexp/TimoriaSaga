@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FieldManager : Singleton<FieldManager>
+public class FieldTileManager : Singleton<FieldTileManager>
 {
     Dictionary<Vector3, GameObject> tileDictionary;
 

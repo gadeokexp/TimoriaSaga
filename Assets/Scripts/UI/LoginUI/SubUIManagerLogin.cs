@@ -20,7 +20,7 @@ public class SubUIManagerLogin : SubUIManager
 
         string pannelName = "Prefabs/UI/loginPannel";
         var pannelPrefab = Resources.Load(pannelName) as GameObject;
-        var pannelObject = Object.Instantiate(pannelPrefab, _subUIManagers.transform);
+        var pannelObject = Object.Instantiate(pannelPrefab, _UIPannels.transform);
 
         _loginPannel = pannelObject.GetComponent<LoginPannel>();
         _loginPopup = pannelObject.GetComponentInChildren<LoginPopup>();
@@ -33,6 +33,12 @@ public class SubUIManagerLogin : SubUIManager
         _loginPopup.LoginButton.onClick.AddListener(Login);
     }
 
+    public override void Deactive()
+    {
+        base.Deactive();
+    }
+
+    // Login UI 세부 기능
     public void Login()
     {
         string account = _loginPopup.GetAccount();
