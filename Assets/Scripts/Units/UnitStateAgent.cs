@@ -111,6 +111,7 @@ public class HitState<T> : FiniteState<T> where T : class
         owner = newOwner;
 
         transferableState.Add((int)UnitState.Beaten);
+        transferableState.Add((int)UnitState.Hit);
         transferableState.Add((int)UnitState.Die);
 
         Enter += EnterBase;

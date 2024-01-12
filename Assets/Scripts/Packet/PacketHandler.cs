@@ -88,7 +88,7 @@ internal class PacketHandler
         if (unitSoul == null) return;
 
         unitSoul.TargetPosition = new Vector3(movePacket.positionX, movePacket.positionY, movePacket.positionZ);
-        unitSoul.LookingDirection = new Vector3(movePacket.directionX, 0, movePacket.directionZ);
+        unitSoul.DirectionNeedToLookAt = new Vector3(movePacket.directionX, 0, movePacket.directionZ);
         unitSoul.ChangeState(unitSoul.States[(int)UnitState.Move]);
     }
 
@@ -102,7 +102,7 @@ internal class PacketHandler
         UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
         if (unitSoul == null) return;
 
-        unitSoul.LookingDirection = new Vector3(idlePacket.directionX, 0, idlePacket.directionZ);
+        unitSoul.DirectionNeedToLookAt = new Vector3(idlePacket.directionX, 0, idlePacket.directionZ);
         unitSoul.ChangeState(unitSoul.States[(int)UnitState.Idle]);
     }
 
@@ -122,7 +122,8 @@ internal class PacketHandler
 
             UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
             if (unitSoul == null) return;
-            
+
+            unitSoul.DirectionNeedToLookAt = new Vector3(skillPacket.directionX, 0, skillPacket.directionZ);
             unitSoul.ChangeState(unitSoul.States[(int)UnitState.Hit]);
         }        
     }

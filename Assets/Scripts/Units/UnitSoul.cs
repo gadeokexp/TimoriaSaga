@@ -20,20 +20,19 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     private Animator animator;
 
     // 이동과 회전
-    public Vector3 LookingDirection { 
-        get => _lookingDirection; 
+    public Vector3 DirectionNeedToLookAt { 
+        get => _DirectionNeedToLookAt; 
         set 
         { 
-            if(_lookingDirection.x != value.x || _lookingDirection.z != value.z)
+            if(_DirectionNeedToLookAt.x != value.x || _DirectionNeedToLookAt.z != value.z)
             {
-                _isDirectionChanged = true;
-                _lookingDirection = value;
+                _DirectionNeedToLookAt = value;
             }
         }
     }
-    Vector3 _lookingDirection;
-    bool _isDirectionChanged = false;
-    Coroutine _rotationTolook;
+
+    Vector3 _DirectionNeedToLookAt;
+    Vector3 _DirectionLookingAt = Vector3.zero;
 
     public Vector3 TargetPosition;
 
@@ -55,10 +54,12 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         IdleState<UnitSoul> idleState = states[(int)UnitState.Idle] as IdleState<UnitSoul>;
         idleState.Enter += OnIdleEnter;
+        idleState.Update += OnSimpleRotateUpdate;
 
         HitState<UnitSoul> hitState = states[(int)UnitState.Hit] as HitState<UnitSoul>;
         hitState.Enter += OnHitEnter;
         hitState.Exit += OnHitExit;
+        hitState.Update += OnSimpleRotateUpdate;
 
         BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
         beatenState.Enter += OnBeatenEnter;
@@ -111,8 +112,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         if (_input != null)
         {
-            _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
-            _rotationTolook = StartCoroutine(RotationtoLook());
+            _DirectionNeedToLookAt = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
         }
     }
 
@@ -129,6 +129,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     float _moveInterval = 1f;
     Vector3 _moveRoute = Vector3.zero;
     Vector3 _moveStart = Vector3.zero;
+
+    void OnSimpleRotateUpdate()
+    {
+        RotationtoLook();
+    }
 
     void OnMoveUpdate()
     {
@@ -154,12 +159,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             // 이동방향이 바뀐경우 회선 처리
             if (_input.DirectionChanged)
             {
-                _lookingDirection = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
-
-                if (_rotationTolook == null)
-                {
-                    _rotationTolook = StartCoroutine(RotationtoLook());
-                }
+                _DirectionNeedToLookAt = new Vector3(_input.XInput, 0, _input.ZInput).normalized;
             }
             //float conTheta = _CollisionDirection.x * _lookingDirection.x + _CollisionDirection.z * _lookingDirection.z;
 
@@ -167,11 +167,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             {
                 // 키보드 이동
                 //transform.position += (_lookingDirection - _CollisionDirection * conTheta) * deltaTime * 3;
-                transform.position += (_lookingDirection - _fixedDirection) * deltaTime * 3;
+                transform.position += (_DirectionNeedToLookAt - _fixedDirection) * deltaTime * 3;
             }
 
             // 이동 보고
-            if (_moveInterval > 1f)
+            if (_moveInterval > 1f || _input.DirectionChanged)
             {
                 SendMovePacket();
                 _moveInterval = 0f;
@@ -189,11 +189,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
                 _moveInterval = deltaTime * 20;
             }
 
-            if (_isDirectionChanged && _rotationTolook == null)
-            {
-                _rotationTolook = StartCoroutine(RotationtoLook());
-            }
-
             if (_moveInterval < 1f)
             {
                 transform.position = Vector3.Lerp(_moveStart, _moveRoute, _moveInterval);
@@ -203,13 +198,16 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
                 transform.position = _moveRoute;
             }
         }
+
+        // 회전 처리
+        RotationtoLook();
     }
 
     void OnIdleEnter()
     {
         if (_diagonalMovementDelta < 0.1f)
         {
-            _lookingDirection = new Vector3(_prevDiagonalX, 0, _prevDiagonalZ).normalized;
+            _DirectionNeedToLookAt = new Vector3(_prevDiagonalX, 0, _prevDiagonalZ).normalized;
             _diagonalMovementDelta = 0.1f;
         }
 
@@ -227,13 +225,9 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         if(isMyCharacter)
         {
             SendSkillPacket();
-            StartCoroutine(WaitForSwing(0.6f));
         }
-        else
-        {
-            StartCoroutine(WaitForSwing(0.3f));
-            currentState = null;
-        }
+
+        StartCoroutine(WaitForSwing(0.6f));
 
         int currentMotion = animator.GetInteger("currentState");
 
@@ -264,12 +258,9 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
 
         BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
-        _lookingDirection = new Vector3(beatenState.BeatenDirectionX, 0, beatenState.BeatenDirectionZ).normalized;
+        _DirectionNeedToLookAt = new Vector3(beatenState.BeatenDirectionX, 0, beatenState.BeatenDirectionZ).normalized;
 
-        if (_rotationTolook == null)
-        {
-            _rotationTolook = StartCoroutine(RotationtoLook());
-        }
+        RotationtoLook();
 
         StartCoroutine(WaitForBeaten(0.2f));
     }
@@ -279,39 +270,37 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         currentState = null;
     }
 
-    IEnumerator RotationtoLook()
+    float _accumulatedDelta = 0;
+    Quaternion lookingDirectionAngle = Quaternion.identity;
+
+    void RotationtoLook()
     {
-        float accumulatedDelta = 0;
-        Vector3 lookingDirection = _lookingDirection;
-        Quaternion lookingDirectionAngle = Quaternion.LookRotation(lookingDirection);
-        //transform.rotation = lookingDirectionAngle; 
+        //Vector3 lookingDirection = _DirectionNeedToLookAt;
+        // = Quaternion.LookRotation(lookingDirection);
 
-        while (true)
+        // 회전 방향이 변했을 경우 리셋
+        if (_DirectionLookingAt != _DirectionNeedToLookAt)
         {
-            accumulatedDelta += Time.deltaTime * 2;
-
-            // 회전 방향이 변했을 경우 리셋
-            if (_lookingDirection != lookingDirection)
-            {
-                lookingDirection = _lookingDirection;
-                lookingDirectionAngle = Quaternion.LookRotation(lookingDirection);
-                accumulatedDelta = 0;
-            }
-
-            // 회전이 끝났을 경우 정리
-            if (accumulatedDelta >= 0.98f)
-            {
-                transform.rotation = lookingDirectionAngle;
-                accumulatedDelta = 0;
-                _rotationTolook = null;
-                break;
-            }
-
-            transform.rotation = Quaternion.Lerp(transform.rotation, lookingDirectionAngle, accumulatedDelta);
-            yield return null;
+            _DirectionLookingAt = _DirectionNeedToLookAt;
+            lookingDirectionAngle = Quaternion.LookRotation(_DirectionNeedToLookAt);
+            _accumulatedDelta = 0;
         }
 
-        if(!isMyCharacter) _isDirectionChanged = false;
+        if (_accumulatedDelta < 1.0f)
+        {
+            _accumulatedDelta += Time.deltaTime * 2;
+
+            // 회전이 끝났을 경우 정리
+            if (_accumulatedDelta >= 0.98f)
+            {
+                transform.rotation = lookingDirectionAngle;
+                _accumulatedDelta = 1.0f;
+            }
+            else
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, lookingDirectionAngle, _accumulatedDelta);
+            }
+        }
     }
 
     IEnumerator ClearPosition()
@@ -359,8 +348,8 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         movePacket.positionX = transform.position.x;
         movePacket.positionY = transform.position.y;
         movePacket.positionZ = transform.position.z;
-        movePacket.directionX = _lookingDirection.x;
-        movePacket.directionZ = _lookingDirection.z;
+        movePacket.directionX = _DirectionNeedToLookAt.x;
+        movePacket.directionZ = _DirectionNeedToLookAt.z;
         movePacket.timeStamp = 33333333;
 
         NetworkManager.Instance.Send(movePacket.Write());
@@ -369,8 +358,8 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     protected void SendIdlePacket()
     {
         CTS_Idle idlePacket = new CTS_Idle();
-        idlePacket.directionX = _lookingDirection.x;
-        idlePacket.directionZ = _lookingDirection.z;
+        idlePacket.directionX = _DirectionNeedToLookAt.x;
+        idlePacket.directionZ = _DirectionNeedToLookAt.z;
         idlePacket.timeStamp = 33333333;
 
         NetworkManager.Instance.Send(idlePacket.Write());
@@ -380,6 +369,8 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     {
         CTS_Skill skillPacket = new CTS_Skill();
         skillPacket.skillId = (int)SKILL_TYPE.SKILL_MELEE;
+        skillPacket.directionX = _DirectionNeedToLookAt.x;
+        skillPacket.directionZ = _DirectionNeedToLookAt.z;
 
         List<int> unitlist = UnitManager.Instance.GetOtherPlayerIDs();
 
@@ -411,7 +402,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
             if(soul != null)
             {
-                float tempTheta = diffUnit.x * _lookingDirection.x + diffUnit.z * _lookingDirection.z;
+                float tempTheta = diffUnit.x * _DirectionNeedToLookAt.x + diffUnit.z * _DirectionNeedToLookAt.z;
 
                 if (tempTheta > 0)
                 {
