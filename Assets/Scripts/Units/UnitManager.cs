@@ -35,7 +35,7 @@ public class UnitManager : Singleton<UnitManager>
 
         // 소울
         UnitSoul soul = player.AddComponent<UnitSoul>();
-        soul.isMyCharacter = isMyCharacter;
+        soul.IsMyCharacter = isMyCharacter;
         soul.ID = Id;
 
         // 충돌체

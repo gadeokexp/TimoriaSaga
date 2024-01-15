@@ -11,8 +11,6 @@ using UnityEngine.Windows;
 
 public class UnitSoul : UnitStateAgent<UnitSoul>
 {
-    [SerializeField]
-    public bool isMyCharacter = true;
     Dictionary<int, Collider> _myCharactersCollision;
 
     public int ID = 0;
@@ -65,7 +63,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         beatenState.Enter += OnBeatenEnter;
         beatenState.Exit += OnBeatenExit;
 
-        if (isMyCharacter)
+        if (_isMyCharacter)
         {
             InputManager.Instance.OnInput += OnInput;
             _input = InputManager.Instance.GameInput;
@@ -118,7 +116,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnMoveExit()
     {
-        if (!isMyCharacter)
+        if (!_isMyCharacter)
         {
             StartCoroutine(ClearPosition());
         }
@@ -139,7 +137,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     {
         float deltaTime = Time.deltaTime;
 
-        if (isMyCharacter)
+        if (_isMyCharacter)
         {
             _moveInterval += deltaTime * 20; // 0.05초에 한번씩 패킷을 주거나 이동처리를 한다
 
@@ -211,7 +209,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             _diagonalMovementDelta = 0.1f;
         }
 
-        if(isMyCharacter)
+        if(_isMyCharacter)
         {
             _myCharactersCollision.Clear();
             SendIdlePacket();
@@ -222,7 +220,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnHitEnter()
     {
-        if(isMyCharacter)
+        if(_isMyCharacter)
         {
             SendSkillPacket();
         }
@@ -429,7 +427,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     private void OnTriggerEnter(Collider other)
     {
-        if(isMyCharacter&&
+        if(_isMyCharacter&&
             currentState != null &&
             currentState.ID == (int)UnitState.Move &&
             other.gameObject.layer == 6)
@@ -451,7 +449,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     private void OnTriggerStay(Collider other)
     {
-        if (isMyCharacter &&
+        if (_isMyCharacter &&
             currentState != null &&
             currentState.ID == (int)UnitState.Move &&
             other.gameObject.layer == 6)
@@ -470,7 +468,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     private void OnTriggerExit(Collider other)
     {
-        if (isMyCharacter &&
+        if (_isMyCharacter &&
             other.gameObject.layer == 6)
         {
             UnitSoul otherSoul = other.gameObject.GetComponent<UnitSoul>();

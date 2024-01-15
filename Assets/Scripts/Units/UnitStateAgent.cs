@@ -19,6 +19,9 @@ enum UnitState
 
 public class UnitStateAgent<T> : MonoBehaviour where T : class
 {
+    protected bool _isMyCharacter = true;
+    public bool IsMyCharacter { get => _isMyCharacter; set { _isMyCharacter = value; } }
+
     protected FiniteState<T> currentState;
     protected FiniteState<T>[] states;
     public FiniteState<T>[] States => states;
@@ -30,7 +33,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
         states = new FiniteState<T>[(int)UnitState.UnitStateLength];
         states[(int)UnitState.Idle] = new IdleState<T>(owner);
         states[(int)UnitState.Move] = new MoveState<T>(owner);
-        states[(int)UnitState.Hit] = new HitState<T>(owner);
+        states[(int)UnitState.Hit] = new HitState<T>(owner, _isMyCharacter);
         states[(int)UnitState.Beaten] = new BeatenState<T>(owner);
         states[(int)UnitState.Die] = new DieState<T>(owner);
 
@@ -104,20 +107,21 @@ public class MoveState<T> : FiniteState<T> where T : class
 
 public class HitState<T> : FiniteState<T> where T : class
 {
-    public HitState(T newOwner)
+    public HitState(T newOwner, bool isMyCharacter)
     {
         _id = (int)UnitState.Hit;
 
         owner = newOwner;
 
         transferableState.Add((int)UnitState.Beaten);
-        transferableState.Add((int)UnitState.Hit);
         transferableState.Add((int)UnitState.Die);
 
-        Enter += EnterBase;
+        if(!isMyCharacter) transferableState.Add((int)UnitState.Hit);
+
+        Enter += BaseEnter;
     }
 
-    private void EnterBase()
+    private void BaseEnter()
     {
         // 이렇게 기본 Enter함수 외에 추가 함수를 붙일 수 있다
     }
