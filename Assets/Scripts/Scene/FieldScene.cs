@@ -8,7 +8,6 @@ public class FieldScene : MonoBehaviour
     void Start()
     {
         FieldTileManager.Instance.Init();
-        NetworkManager.Instance.Init();
         UIManager.Instance.ChangeUISubManager(ESubUIManagerID.Field);
     }
 }

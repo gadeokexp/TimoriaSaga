@@ -58,6 +58,8 @@ public class PacketManager
         maHandler.Add((ushort)PacketID.STC_Connected, PacketHandler.STC_ConnectedHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_PermitLogin, MakePacket<STC_PermitLogin>);
         maHandler.Add((ushort)PacketID.STC_PermitLogin, PacketHandler.STC_PermitLoginHandler);
+        maMakePacketJob.Add((ushort)PacketID.STC_DenyLogin, MakePacket<STC_DenyLogin>);
+        maHandler.Add((ushort)PacketID.STC_DenyLogin, PacketHandler.STC_DenyLoginHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_ResponseCreatNewUnit, MakePacket<STC_ResponseCreatNewUnit>);
         maHandler.Add((ushort)PacketID.STC_ResponseCreatNewUnit, PacketHandler.STC_ResponseCreatNewUnitHandler);
 

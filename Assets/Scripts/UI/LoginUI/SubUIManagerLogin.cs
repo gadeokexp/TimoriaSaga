@@ -41,11 +41,10 @@ public class SubUIManagerLogin : SubUIManager
     // Login UI 세부 기능
     public void Login()
     {
-        string account = _loginPopup.GetAccount();
-        string password = _loginPopup.GetPassword();
+        DataManager.Instance.SetAccountInfo(_loginPopup.GetAccount(), _loginPopup.GetPassword());
 
         _loginPopup.gameObject.SetActive(false);
 
-        SceneManager.LoadScene("Field");
+        GameInstance.Instance.OperateGameNetwork();
     }
 }

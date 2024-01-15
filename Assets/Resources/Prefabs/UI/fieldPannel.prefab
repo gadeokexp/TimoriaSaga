@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InventoryButton: {fileID: 8049374060249604918}
+  _unitName: {fileID: 2150473112903347573}
 --- !u!1 &2632380626524076207
 GameObject:
   m_ObjectHideFlags: 0

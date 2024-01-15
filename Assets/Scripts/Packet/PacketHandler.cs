@@ -1,5 +1,6 @@
 ﻿using System;
 using TimoriaSagaNetworkLibrary;
+using Unity.VisualScripting;
 using UnityEngine;
 
 internal class PacketHandler
@@ -166,14 +167,11 @@ internal class PacketHandler
         // 접속이 되면 로그인 요청을 하자
         CTS_RequestLogin loginPacket = new CTS_RequestLogin();
 
-        // 장비에 유니크한 스트링을 유니티에서 만들어주는 속성을 이용한다.
-        // 단지 이때는 로컬에 있는 모든 클라이언트가 같은 값을 뱉을 수 있기에 주의 필요
-        //SystemInfo.deviceUniqueIdentifier;
-        loginPacket.UniqueId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+        loginPacket.UniqueId = DataManager.Instance.AccountName;
+        loginPacket.AccountPassword = DataManager.Instance.Password;
 
         // 일단 이걸 ID로 쓰자
         NetworkManager.Instance.UniqueId = loginPacket.UniqueId;
-
         NetworkManager.Instance.Send(loginPacket.Write());
     }
 
@@ -195,12 +193,20 @@ internal class PacketHandler
         }
         else
         {
-            // 이미 만든 플레이어가 응답으로 왔을때는 첫번째 캐릭터로 로그인(사실 하나밖에 없다)
             STC_PermitLogin.Unit unitInfo = loginPacket.units[0];
             CTS_EnterField enterPacket = new CTS_EnterField();
             enterPacket.UnitName = unitInfo.UnitName;
+            DataManager.Instance.UnitName = unitInfo.UnitName;
+
             NetworkManager.Instance.Send(enterPacket.Write());
+
+            GameInstance.Instance.StartGame();
+
         }
+    }
+
+    public static void STC_DenyLoginHandler(PacketSession session, IPacket packet)
+    {
     }
 
     public static void STC_ResponseCreatNewUnitHandler(PacketSession session, IPacket packet)

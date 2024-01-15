@@ -28,8 +28,9 @@ public enum PacketID
 	STC_Connected = 20,
 	CTS_RequestLogin = 21,
 	STC_PermitLogin = 22,
-	CTS_CreatNewUnit = 23,
-	STC_ResponseCreatNewUnit = 24,
+	STC_DenyLogin = 23,
+	CTS_CreatNewUnit = 24,
+	STC_ResponseCreatNewUnit = 25,
 	
 }
 
@@ -1745,6 +1746,7 @@ public class STC_Connected : IPacket
 public class CTS_RequestLogin : IPacket
 {
     public string UniqueId;
+	public string AccountPassword;
     public ushort Protocol { get { return (ushort)PacketID.CTS_RequestLogin; } }
 
     public void Read(ArraySegment<byte> segment)
@@ -1760,6 +1762,11 @@ public class CTS_RequestLogin : IPacket
 		this.UniqueId = Encoding.Unicode.GetString(readSpan.Slice(count, UniqueIdLength));
 		count += UniqueIdLength;
 		
+		ushort AccountPasswordLength = BitConverter.ToUInt16(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(ushort);
+		this.AccountPassword = Encoding.Unicode.GetString(readSpan.Slice(count, AccountPasswordLength));
+		count += AccountPasswordLength;
+		
     }
 
     public ArraySegment<byte> Write()
@@ -1767,6 +1774,7 @@ public class CTS_RequestLogin : IPacket
         // 4는 패킷 해더 길이값(ushort) + ID(ushort) 속도를 생각해서 4로 넣음
         int packetLength = 4;
         packetLength += 2 + (ushort)Encoding.Unicode.GetByteCount(this.UniqueId);
+        packetLength += 2 + (ushort)Encoding.Unicode.GetByteCount(this.AccountPassword);
         ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
         ushort count = 0;
         bool serializeFlag = true;
@@ -1781,6 +1789,11 @@ public class CTS_RequestLogin : IPacket
 		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), UniqueIdLength);
 		count += sizeof(ushort);
 		count += UniqueIdLength;
+		
+		ushort AccountPasswordLength = (ushort)Encoding.Unicode.GetBytes(this.AccountPassword, 0, this.AccountPassword.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), AccountPasswordLength);
+		count += sizeof(ushort);
+		count += AccountPasswordLength;
 		
         serializeFlag &= BitConverter.TryWriteBytes(span, count);
 
@@ -1943,6 +1956,45 @@ public class STC_PermitLogin : IPacket
 		foreach (Unit unit in this.units)
 		    serializeFlag &= unit.Write(span, ref count);
 		
+        serializeFlag &= BitConverter.TryWriteBytes(span, count);
+
+        if (serializeFlag == false) return null;
+
+        return segment;
+    }
+}
+public class STC_DenyLogin : IPacket
+{
+    
+    public ushort Protocol { get { return (ushort)PacketID.STC_DenyLogin; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> readSpan = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+
+        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        // 4는 패킷 해더 길이값(ushort) + ID(ushort) 속도를 생각해서 4로 넣음
+        int packetLength = 4;
+
+        ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
+        ushort count = 0;
+        bool serializeFlag = true;
+
+        Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.STC_DenyLogin);
+        count += sizeof(ushort);
+
+        
         serializeFlag &= BitConverter.TryWriteBytes(span, count);
 
         if (serializeFlag == false) return null;
