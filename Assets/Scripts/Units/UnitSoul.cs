@@ -268,7 +268,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         currentState = null;
     }
 
-    float _accumulatedDelta = 0;
+    float _accumulatedDelta = 1.0f;
     Quaternion lookingDirectionAngle = Quaternion.identity;
 
     void RotationtoLook()
