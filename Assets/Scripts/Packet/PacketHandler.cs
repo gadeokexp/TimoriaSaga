@@ -15,14 +15,10 @@ internal class PacketHandler
 
     public static void STC_LeaveFieldHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_SpawnHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_UnitSpawnHandler(PacketSession session, IPacket packet)
@@ -44,20 +40,14 @@ internal class PacketHandler
 
     public static void STC_DieHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_ChangeHpHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_DespawnHandler(PacketSession session, IPacket packet)
     {
-        //Debug.Log($"Despawn {miTestCount++}");
-
         STC_Despawn despawnPacket = packet as STC_Despawn;
 
         foreach (STC_Despawn.GameObjectId gameObjectId in despawnPacket.gameObjectIds)
@@ -68,14 +58,10 @@ internal class PacketHandler
 
     public static void STC_DespawnProjectileAtHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_FixPositionHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_MoveHandler(PacketSession session, IPacket packet)
@@ -109,8 +95,6 @@ internal class PacketHandler
 
     public static void STC_TurnHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
     public static void STC_SkillHandler(PacketSession session, IPacket packet)
@@ -211,8 +195,6 @@ internal class PacketHandler
 
     public static void STC_ResponseCreatNewUnitHandler(PacketSession session, IPacket packet)
     {
-        //STC_Chat chatPacket = packet as STC_Chat;
-        //ClientSideSession clientSideSession = session as ClientSideSession;
     }
 
 }
