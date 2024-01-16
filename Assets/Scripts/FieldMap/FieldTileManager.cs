@@ -16,7 +16,9 @@ public class FieldTileManager : Singleton<FieldTileManager>
         foreach ( var tileEntity in tiles )
         {
             Tile eachtile = tileEntity.Value;
-            GameObject tileObject = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tile1);
+            int prefebIndex = tileEntity.Value.PrefabIndex;
+
+            GameObject tileObject = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Tiles[prefebIndex]);
             tileObject.transform.position = new Vector3(eachtile.Position[0], eachtile.Position[1], eachtile.Position[2]);
             tileDictionary.Add(tileObject.transform.position, tileObject);
         }

@@ -10,7 +10,7 @@ public interface ContentDataHelper
 {
     public string GetFilePath();
     public void Convert(ContentData dataBlcok);
-    public ContentEntity GetContent(int index);
+    public ContentEntity GetContentEntity(int index);
     public int GetContentLength();
 }
 

@@ -6,13 +6,18 @@ public class ResourceManager : Singleton<ResourceManager>
 {
     //private readonly Dictionary<string, GameObject> _tileDictionary = new Dictionary<string, GameObject>();
 
-    public GameObject Tile1;
+    public List<GameObject> Tiles;
     public GameObject Player;
     public GameObject Player2;
 
     public ResourceManager()
     {
-        Tile1 = Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center");
+        Tiles = new List<GameObject>()
+        {
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center"),
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center1"),
+        };
+        
         Player = Resources.Load<GameObject>("Prefabs/Unit/RPGHeroPBR");
         Player2 = Resources.Load<GameObject>("Prefabs/Unit/DoubleSword05");
     }
