@@ -16,6 +16,9 @@ public class ResourceManager : Singleton<ResourceManager>
         {
             Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center"),
             Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center1"),
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center2"),
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center3"),
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center4"),
         };
         
         Player = Resources.Load<GameObject>("Prefabs/Unit/RPGHeroPBR");
