@@ -3,45 +3,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class JobQueue
+public class JobUnit<T>
 {
-    // 서버를 식당에 비유하자면 주방에는 모든 일꾼이 있을 필요가 없다
-    // 주방은 좁으니까 (한정된 자원)
-    // 주방장이 전달되는 주문내용을 바탕으로 혼자 만드는게 더 효과적인 것.
-    // 이렇게 다수가 소수에게 일감만 토스하는걸 커맨드 패턴이라고 한다 
-    Queue<Action> maJobQueue = new Queue<Action>();
+    Action<T> _actinonUnit;
+    T Arg;
 
-    object mcLock = new object();
-
-    public void PushJob(Action job)
+    public JobUnit(Action<T> actinon, T arg)
     {
-        lock (mcLock)
-        {
-            maJobQueue.Enqueue(job);
-        }
+        _actinonUnit = actinon;
+        Arg = arg;
     }
 
-    public Action Pop()
+    public void Execute()
     {
-        lock (mcLock)
-        {
-            if (maJobQueue.Count == 0)
-            {
-                return null;
-            }
+        _actinonUnit.Invoke(Arg);
+    }
+}
 
-            return maJobQueue.Dequeue();
-        }
+public class JobQueue<T>
+{
+    public Queue<JobUnit<T>> _jobQueue = new Queue<JobUnit<T>>();
+
+    public void SchduleJob(Action<T> action, T t1)
+    {
+        PushJob(new JobUnit<T>(action, t1));
+    }
+
+    public void PushJob(JobUnit<T> job)
+    {
+        _jobQueue.Enqueue(job);
     }
 
     public int GetCount()
     {
-        return maJobQueue.Count;
+        return _jobQueue.Count;
     }
 
-    public void Clear()
+    public JobUnit<T> Pop()
     {
-        maJobQueue.Clear();
+        if (_jobQueue.Count == 0)
+        {
+            return null;
+        }
+
+        return _jobQueue.Dequeue();
+    }
+
+    public void Excute()
+    {
+        if (_jobQueue.Count == 0)
+        {
+            return;
+        }
+
+        _jobQueue.Dequeue().Execute();
     }
 }

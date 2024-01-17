@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
@@ -41,6 +42,19 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     float _prevDiagonalX = 0;
     float _prevDiagonalZ = 0;
 
+    JobQueue<int> _animationChangeCommander = new JobQueue<int>();
+    float _animationChangeDelta = 0;
+
+    public void SchduleAnimationChange(int animationIndex)
+    {
+        _animationChangeCommander.SchduleJob(ChangeAnimation, animationIndex);
+    }
+
+    public void ChangeAnimation(int animationIndex)
+    {
+        animator.SetInteger("currentState", animationIndex);
+    }
+
     void Start()
     {
         StateInit(this);
@@ -76,6 +90,14 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void Update()
     {
+        _animationChangeDelta += Time.deltaTime;
+
+        if(_animationChangeDelta > 0.01f && _animationChangeCommander.GetCount() > 0)
+        {
+            _animationChangeDelta = 0;
+            _animationChangeCommander.Excute();
+        }
+
         if (currentState != null && currentState.Update != null)
         {
             currentState.Update();
@@ -88,25 +110,25 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         {
             // 입력 대응 1순위
             // 공격키가 눌렸고 현재 공격상태가 아니면 공격상태로 전환한다.
-            ChangeState(states[(int)UnitState.Hit]);
+            ChangeState((int)UnitState.Hit);
         }
         else if((input.XInput != 0f || input.ZInput != 0f))
         {
             // 입력 대응 2순위
             // 이동키가 눌렸고 현재 이동상태가  아니면 이동상태로 전환한다.
-            ChangeState(states[(int)UnitState.Move]);
+            ChangeState((int)UnitState.Move);
         }
         else
         {
             // 아무 키도 안눌렸으면 아이들 상태로 전환한다.
             // 이미 아이들 상태이면 전환되지 않는다.
-            ChangeState(states[(int)UnitState.Idle]);
+            ChangeState((int)UnitState.Idle);
         }
     }
 
     void OnMoveEnter()
     {
-        animator.SetInteger("currentState", (int)UnitState.Move);
+        SchduleAnimationChange((int)UnitState.Move);
 
         if (_input != null)
         {
@@ -215,11 +237,15 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             SendIdlePacket();
         }
 
-        animator.SetInteger("currentState", (int)UnitState.Idle);
+        SchduleAnimationChange((int)UnitState.Idle);
     }
 
     void OnHitEnter()
     {
+        // 임시
+        if (_animationChangeDelta < 0.001f && !IsMyCharacter)
+            Debug.Log("아이들 상태변환중 너무 갑작스럽게 히트가 상태가 되었음");
+
         if(_isMyCharacter)
         {
             SendSkillPacket();
@@ -231,11 +257,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         if (currentMotion == 2)
         {
-            animator.SetInteger("currentState", 201);
+            SchduleAnimationChange(201);
         }
         else
         {
-            animator.SetInteger("currentState", (int)UnitState.Hit);
+            SchduleAnimationChange((int)UnitState.Hit);
         }
     }
 
@@ -252,7 +278,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
         else
         {
-            animator.SetInteger("currentState", (int)UnitState.Beaten);
+            SchduleAnimationChange((int)UnitState.Beaten);
         }
 
         BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;

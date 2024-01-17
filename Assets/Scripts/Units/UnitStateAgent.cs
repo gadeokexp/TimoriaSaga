@@ -7,7 +7,7 @@ using UnityEngine.Windows;
 using UnityEngine.XR;
 using static UnityEngine.UI.GridLayoutGroup;
 
-enum UnitState
+public enum UnitState
 {
     Idle,
     Move,
@@ -37,7 +37,7 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
         states[(int)UnitState.Beaten] = new BeatenState<T>(owner);
         states[(int)UnitState.Die] = new DieState<T>(owner);
 
-        ChangeState(states[(int)UnitState.Idle]);
+        ChangeState((int)UnitState.Idle);
     }
 
     public void AgentUpdate()
@@ -67,6 +67,32 @@ public class UnitStateAgent<T> : MonoBehaviour where T : class
         }
         
         currentState = newState;
+
+        if (currentState.Enter != null)
+        {
+            currentState.Enter();
+        }
+    }
+
+    public void ChangeState(int newStateID)
+    {
+        if (newStateID < 0 || states.Length <= newStateID) return;
+
+        if (currentState != null)
+        {
+            // 현상태와 바뀌는 상태가 같을경우 여기서 처리해주자
+            if (!currentState.isTransforable(newStateID))
+            {
+                return;
+            }
+
+            if (currentState.Exit != null)
+            {
+                currentState.Exit();
+            }
+        }
+
+        currentState = states[newStateID];
 
         if (currentState.Enter != null)
         {

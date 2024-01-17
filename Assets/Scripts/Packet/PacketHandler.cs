@@ -76,7 +76,7 @@ internal class PacketHandler
 
         unitSoul.TargetPosition = new Vector3(movePacket.positionX, movePacket.positionY, movePacket.positionZ);
         unitSoul.DirectionNeedToLookAt = new Vector3(movePacket.directionX, 0, movePacket.directionZ);
-        unitSoul.ChangeState(unitSoul.States[(int)UnitState.Move]);
+        unitSoul.ChangeState((int)UnitState.Move);
     }
 
     public static void STC_IdleHandler(PacketSession session, IPacket packet)
@@ -90,7 +90,7 @@ internal class PacketHandler
         if (unitSoul == null) return;
 
         unitSoul.DirectionNeedToLookAt = new Vector3(idlePacket.directionX, 0, idlePacket.directionZ);
-        unitSoul.ChangeState(unitSoul.States[(int)UnitState.Idle]);
+        unitSoul.ChangeState((int)UnitState.Idle);
     }
 
     public static void STC_TurnHandler(PacketSession session, IPacket packet)
@@ -109,7 +109,7 @@ internal class PacketHandler
             if (unitSoul == null) return;
 
             unitSoul.DirectionNeedToLookAt = new Vector3(skillPacket.directionX, 0, skillPacket.directionZ);
-            unitSoul.ChangeState(unitSoul.States[(int)UnitState.Hit]);
+            unitSoul.ChangeState((int)UnitState.Hit);
         }        
     }
 
@@ -140,7 +140,7 @@ internal class PacketHandler
             unitBeatenState.BeatenDirectionZ = -beatenPacket.directionZ;
             unitBeatenState.SkillID = beatenPacket.skillId;
 
-            unitSoul.ChangeState(unitSoul.States[(int)UnitState.Beaten]);
+            unitSoul.ChangeState((int)UnitState.Beaten);
         }
     }
 
