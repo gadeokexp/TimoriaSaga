@@ -1444,10 +1444,14 @@ public class STC_Beaten : IPacket
 	public struct Target
 	{
 	    public int GameObjectId;
+		public int hp;
 	
 	    public void Read(ReadOnlySpan<byte> readSpan, ref ushort count)
 	    {
 	        this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+			count += sizeof(int);
+			
+			this.hp = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
 			count += sizeof(int);
 			
 	    }
@@ -1459,6 +1463,9 @@ public class STC_Beaten : IPacket
 	        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
 			count += sizeof(int);
 			
+			serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.hp);
+			count += sizeof(int);
+			
 	        return serializeFlag;
 	    }
 	
@@ -1467,6 +1474,7 @@ public class STC_Beaten : IPacket
 	        int entityLength = 0;
 	
 	        entityLength += sizeof(int);
+			entityLength += sizeof(int);
 	
 	        return entityLength;
 	    }

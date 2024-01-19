@@ -21,7 +21,7 @@ public class UnitManager : Singleton<UnitManager>
         //SpawnUnit(true, 0, 5, 0);
     }
 
-    public void SpawnUnit(bool isMyCharacter,int Id, Vector3 position, Vector3 rotation)
+    public void SpawnUnit(bool isMyCharacter,int Id, Vector3 position, Vector3 rotation, int maxHp, int Hp)
     {
         // 첫번째 플레이어
         GameObject player = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.Player);
@@ -37,6 +37,8 @@ public class UnitManager : Singleton<UnitManager>
         UnitSoul soul = player.AddComponent<UnitSoul>();
         soul.IsMyCharacter = isMyCharacter;
         soul.ID = Id;
+        soul.MaxHp = maxHp;
+        soul.Hp = Hp;
 
         // 충돌체
         CapsuleCollider cc = player.AddComponent<CapsuleCollider>();

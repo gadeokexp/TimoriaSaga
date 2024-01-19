@@ -19,11 +19,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     private Animator animator;
 
     // 이동과 회전
-    public Vector3 DirectionNeedToLookAt { 
-        get => _DirectionNeedToLookAt; 
-        set 
-        { 
-            if(_DirectionNeedToLookAt.x != value.x || _DirectionNeedToLookAt.z != value.z)
+    public Vector3 DirectionNeedToLookAt {
+        get => _DirectionNeedToLookAt;
+        set
+        {
+            if (_DirectionNeedToLookAt.x != value.x || _DirectionNeedToLookAt.z != value.z)
             {
                 _DirectionNeedToLookAt = value;
             }
@@ -44,6 +44,13 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     JobQueue<int> _animationChangeCommander = new JobQueue<int>();
     float _animationChangeDelta = 0;
+
+    // 유닛 체력
+    int _maxHp;
+    public int MaxHp { get { return _maxHp; } set { _maxHp = value; } }
+
+    int _hp;
+    public int Hp { get { return _hp; } set { _hp = value; } }
 
     public void SchduleAnimationChange(int animationIndex)
     {
@@ -76,6 +83,10 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
         beatenState.Enter += OnBeatenEnter;
         beatenState.Exit += OnBeatenExit;
+
+        DieState<UnitSoul> dieState = states[(int)UnitState.Die] as DieState<UnitSoul>;
+        dieState.Enter += OnDieEnter;
+        dieState.Exit += OnDieExit;
 
         if (_isMyCharacter)
         {
@@ -292,6 +303,16 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     void OnBeatenExit()
     {
         currentState = null;
+    }
+
+    void OnDieEnter()
+    {
+        Debug.Log("누군가 죽었습니다!!!!!");
+        SchduleAnimationChange((int)UnitState.Die);
+    }
+
+    void OnDieExit()
+    {
     }
 
     float _accumulatedDelta = 1.0f;

@@ -10,7 +10,7 @@ internal class PacketHandler
         STC_EnterField enterPacket = packet as STC_EnterField;
 
         Vector3 position = new Vector3(enterPacket.positionX, enterPacket.positionY, enterPacket.positionZ);
-        UnitManager.Instance.SpawnUnit(true, enterPacket.GameObjectId, position, Vector3.back);
+        UnitManager.Instance.SpawnUnit(true, enterPacket.GameObjectId, position, Vector3.back, enterPacket.maxHp, enterPacket.hp);
     }
 
     public static void STC_LeaveFieldHandler(PacketSession session, IPacket packet)
@@ -34,7 +34,7 @@ internal class PacketHandler
             Vector3 position = new Vector3(objectInfo.positionX, objectInfo.positionY, objectInfo.positionZ);
             Vector3 rotation = new Vector3(objectInfo.directionX, 0, objectInfo.directionZ);
 
-            UnitManager.Instance.SpawnUnit(false, objectInfo.GameObjectId, position, rotation);
+            UnitManager.Instance.SpawnUnit(false, objectInfo.GameObjectId, position, rotation, objectInfo.maxHp, objectInfo.hp);
         }
     }
 
@@ -134,13 +134,27 @@ internal class PacketHandler
                 if (unitSoul == null) continue;
             }
 
-            BeatenState<UnitSoul>  unitBeatenState = unitSoul.States[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
-            unitBeatenState.AttackkerID = beatenPacket.GameObjectId;
-            unitBeatenState.BeatenDirectionX = -beatenPacket.directionX;
-            unitBeatenState.BeatenDirectionZ = -beatenPacket.directionZ;
-            unitBeatenState.SkillID = beatenPacket.skillId;
+            // 깍인 체력 저장
+            unitSoul.Hp = target.hp;
 
-            unitSoul.ChangeState((int)UnitState.Beaten);
+            if (target.hp > 0)
+            {
+                BeatenState<UnitSoul> unitBeatenState = unitSoul.States[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
+                unitBeatenState.AttackerID = beatenPacket.GameObjectId;
+                unitBeatenState.BeatenDirectionX = -beatenPacket.directionX;
+                unitBeatenState.BeatenDirectionZ = -beatenPacket.directionZ;
+                unitBeatenState.SkillID = beatenPacket.skillId;
+
+                unitSoul.ChangeState((int)UnitState.Beaten);
+            }
+            else
+            {
+                // 체력이 다됬다 죽어야 한다.
+                DieState<UnitSoul> unitDieState = unitSoul.States[(int)(UnitState.Die)] as DieState<UnitSoul>;
+                unitDieState.AttackerID = beatenPacket.GameObjectId;
+
+                unitSoul.ChangeState((int)UnitState.Die);
+            }
         }
     }
 

@@ -156,7 +156,7 @@ public class HitState<T> : FiniteState<T> where T : class
 public class BeatenState<T> : FiniteState<T> where T : class
 {
     public int SkillID;
-    public int AttackkerID;
+    public int AttackerID;
     public float BeatenDirectionX;
     public float BeatenDirectionZ;
 
@@ -173,6 +173,8 @@ public class BeatenState<T> : FiniteState<T> where T : class
 
 public class DieState <T> : FiniteState<T> where T : class
 {
+    public int AttackerID;
+
     public DieState(T newOwner)
     {
         _id = (int)UnitState.Die;
