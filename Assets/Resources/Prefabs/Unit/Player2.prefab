@@ -6234,7 +6234,7 @@ GameObject:
   - component: {fileID: 5163192511320566031}
   - component: {fileID: 5163192511320566030}
   m_Layer: 6
-  m_Name: DoubleSword05
+  m_Name: Player2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

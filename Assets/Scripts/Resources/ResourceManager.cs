@@ -21,8 +21,8 @@ public class ResourceManager : Singleton<ResourceManager>
             Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center4"),
         };
         
-        Player = Resources.Load<GameObject>("Prefabs/Unit/RPGHeroPBR");
-        Player2 = Resources.Load<GameObject>("Prefabs/Unit/DoubleSword05");
+        Player = Resources.Load<GameObject>("Prefabs/Unit/Player1");
+        Player2 = Resources.Load<GameObject>("Prefabs/Unit/Player2");
     }
 
     public GameObject SpawnObject(GameObject obj)
