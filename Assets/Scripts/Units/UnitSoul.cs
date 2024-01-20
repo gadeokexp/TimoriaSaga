@@ -295,6 +295,10 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         BeatenState<UnitSoul> beatenState = states[(int)UnitState.Beaten] as BeatenState<UnitSoul>;
         _DirectionNeedToLookAt = new Vector3(beatenState.BeatenDirectionX, 0, beatenState.BeatenDirectionZ).normalized;
 
+        // 히트 이펙트
+        GameObject hitObject = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.EffectHit);
+        hitObject.transform.position = transform.position + Vector3.up + _DirectionNeedToLookAt * 0.4f;
+
         RotationtoLook();
 
         StartCoroutine(WaitForBeaten(0.2f));

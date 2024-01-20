@@ -9,6 +9,7 @@ public class ResourceManager : Singleton<ResourceManager>
     public List<GameObject> Tiles;
     public GameObject Player;
     public GameObject Player2;
+    public GameObject EffectHit;
 
     public ResourceManager()
     {
@@ -23,6 +24,8 @@ public class ResourceManager : Singleton<ResourceManager>
         
         Player = Resources.Load<GameObject>("Prefabs/Unit/Player1");
         Player2 = Resources.Load<GameObject>("Prefabs/Unit/Player2");
+
+        EffectHit = Resources.Load<GameObject>("Prefabs/Effects/EffectHit/EffectHit");
     }
 
     public GameObject SpawnObject(GameObject obj)
