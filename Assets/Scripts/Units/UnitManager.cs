@@ -43,13 +43,13 @@ public class UnitManager : Singleton<UnitManager>
         // 충돌체
         CapsuleCollider cc = player.AddComponent<CapsuleCollider>();
         cc.height = 1.88f;
-        cc.radius = 0.7f;
+        cc.radius = 0.65f;
         cc.center = new Vector3(0, 0.9f, 0);
 
         // 유닛끼리만 사용하는 트리거 충돌체
         CapsuleCollider uc = player.AddComponent<CapsuleCollider>();
         uc.height = 1.88f;
-        uc.radius = 0.7f;
+        uc.radius = 0.65f;
         uc.center = new Vector3(0, 0.9f, 0);
         uc.isTrigger = true;
         uc.includeLayers = 1 << 6; // Unit 레이어 설정

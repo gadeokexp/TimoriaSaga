@@ -311,8 +311,17 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void OnDieEnter()
     {
-        Debug.Log("누군가 죽었습니다!!!!!");
         SchduleAnimationChange((int)UnitState.Die);
+
+        CapsuleCollider[] colliders = gameObject.GetComponents<CapsuleCollider>();
+
+        foreach (CapsuleCollider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
     }
 
     void OnDieExit()
