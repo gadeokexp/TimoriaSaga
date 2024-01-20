@@ -11,6 +11,8 @@ public class ResourceManager : Singleton<ResourceManager>
     public GameObject Player2;
     public GameObject EffectHit;
 
+    List<GameObject> PoolEffectHit;
+
     public ResourceManager()
     {
         Tiles = new List<GameObject>()
@@ -26,11 +28,30 @@ public class ResourceManager : Singleton<ResourceManager>
         Player2 = Resources.Load<GameObject>("Prefabs/Unit/Player2");
 
         EffectHit = Resources.Load<GameObject>("Prefabs/Effects/EffectHit/EffectHit");
+        PoolEffectHit = new List<GameObject>();
     }
 
     public GameObject SpawnObject(GameObject obj)
     {
-        return Object.Instantiate(obj);
+        if (obj == EffectHit)
+        {
+            foreach (GameObject hitObject in PoolEffectHit)
+            {
+                if (hitObject.activeSelf == false)
+                {
+                    hitObject.SetActive(true);
+                    return hitObject;
+                }
+            }
+
+            GameObject newHitObject = Object.Instantiate(obj);
+            PoolEffectHit.Add(newHitObject);
+            return newHitObject;            
+        }
+        else
+        {
+            return Object.Instantiate(obj);
+        }
     }
 
     public void DespawnObject(GameObject obj)
