@@ -6,5 +6,4 @@ using UnityEngine;
 
 public class TileSoul : MonoBehaviour
 {
-    [SerializeField] bool haveMesh;    
 }

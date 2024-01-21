@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 4907512274527025444}
   - component: {fileID: 5384735212075678513}
   - component: {fileID: -1195775591011026232}
-  m_Layer: 0
-  m_Name: Tile_Corner
+  m_Layer: 7
+  m_Name: Tile_Corner2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,13 +28,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6852789893201058033}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &7205208687854325230
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -60,6 +60,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -97,7 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528720a03c445f2479c2b3e0ac23467e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  haveMesh: 0
 --- !u!54 &-1195775591011026232
 Rigidbody:
   m_ObjectHideFlags: 0

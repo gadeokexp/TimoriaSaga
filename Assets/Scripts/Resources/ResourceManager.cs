@@ -22,6 +22,12 @@ public class ResourceManager : Singleton<ResourceManager>
             Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center2"),
             Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center3"),
             Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Center4"),
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Corner1"), // 5번 타일
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Corner2"), // 6번 타일
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Corner3"), // 7번 타일
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Corner4"), // 8번 타일
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Edge1"),   // 9번 타일
+            Resources.Load<GameObject>("Prefabs/GrassLand/Tiles/Tile_Edge2")   // 10번 타일
         };
         
         Player = Resources.Load<GameObject>("Prefabs/Unit/Player1");

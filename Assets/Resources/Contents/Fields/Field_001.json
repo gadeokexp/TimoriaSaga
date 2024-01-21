@@ -42,7 +42,7 @@
     },
     {
       "ContentKey": 5,
-      "PrefabIndex": 0,
+      "PrefabIndex": 10,
       "Type": 1,
       "Position": [
         0,
@@ -52,7 +52,7 @@
     },
     {
       "ContentKey": 6,
-      "PrefabIndex": 2,
+      "PrefabIndex": 6,
       "Type": 1,
       "Position": [
         2,
@@ -62,22 +62,22 @@
     },
     {
       "ContentKey": 7,
-      "PrefabIndex": 0,
+      "PrefabIndex": 9,
       "Type": 1,
       "Position": [
         0,
-        -2,
-        0
+        2,
+        2
       ]
     },
     {
       "ContentKey": 8,
-      "PrefabIndex": 0,
+      "PrefabIndex": 5,
       "Type": 1,
       "Position": [
         2,
-        -2,
-        0
+        2,
+        2
       ]
     },
     {
@@ -5648,6 +5648,66 @@
         36,
         0,
         -10
+      ]
+    },
+    {
+      "ContentKey": 566,
+      "PrefabIndex": 9,
+      "Type": 1,
+      "Position": [
+        -2,
+        2,
+        2
+      ]
+    },
+    {
+      "ContentKey": 567,
+      "PrefabIndex": 10,
+      "Type": 1,
+      "Position": [
+        -2,
+        2,
+        0
+      ]
+    },
+    {
+      "ContentKey": 568,
+      "PrefabIndex": 9,
+      "Type": 1,
+      "Position": [
+        -4,
+        2,
+        2
+      ]
+    },
+    {
+      "ContentKey": 569,
+      "PrefabIndex": 10,
+      "Type": 1,
+      "Position": [
+        -4,
+        2,
+        0
+      ]
+    },
+    {
+      "ContentKey": 570,
+      "PrefabIndex": 8,
+      "Type": 1,
+      "Position": [
+        -6,
+        2,
+        2
+      ]
+    },
+    {
+      "ContentKey": 571,
+      "PrefabIndex": 7,
+      "Type": 1,
+      "Position": [
+        -6,
+        2,
+        0
       ]
     }
   ]
