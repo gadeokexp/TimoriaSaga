@@ -175,6 +175,8 @@ internal class PacketHandler
                 // 체력이 다됬다 죽어야 한다.
                 DieState<UnitSoul> unitDieState = unitSoul.States[(int)(UnitState.Die)] as DieState<UnitSoul>;
                 unitDieState.AttackerID = beatenPacket.GameObjectId;
+                unitDieState.BeatenDirectionX = -beatenPacket.directionX;
+                unitDieState.BeatenDirectionZ = -beatenPacket.directionZ;
 
                 unitSoul.ChangeState((int)UnitState.Die);
             }

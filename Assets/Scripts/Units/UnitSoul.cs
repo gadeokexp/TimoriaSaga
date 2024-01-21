@@ -331,7 +331,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             // 컬리전이 단순히 비활성화 될때 종종 처리가안된다.
             // 그래서 어떤 유닛이 죽으면 각 클라이언트들은 죽은 유닛의 충돌 관계를 손수 정리해줄 필요가 있었다.
             UnitManager.Instance.PlayerUnitSoul.RemoveCollisionRelationshipWith(ID);
-        }        
+        }   
 
         CapsuleCollider[] colliders = gameObject.GetComponents<CapsuleCollider>();
 
@@ -342,6 +342,12 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.isKinematic = true;
+
+        // 히트 이펙트 처리
+        DieState<UnitSoul> dieState = states[(int)UnitState.Die] as DieState<UnitSoul>;
+        _DirectionNeedToLookAt = new Vector3(dieState.BeatenDirectionX, 0, dieState.BeatenDirectionZ).normalized;
+        GameObject hitObject = ResourceManager.Instance.SpawnObject(ResourceManager.Instance.EffectHit);
+        hitObject.transform.position = transform.position + Vector3.up + _DirectionNeedToLookAt * 0.4f;
     }
 
     public void RemoveCollisionRelationshipWith(int id)
@@ -398,6 +404,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         animator.Play("Idle_SwordShield");
 
         transform.position = new Vector3(revivePacket.positionX, revivePacket.positionY, revivePacket.positionZ);
+        transform.forward = new Vector3(0, 0, -1);
 
         _hp = _maxHp;
 

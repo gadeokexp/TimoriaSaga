@@ -45,7 +45,7 @@ public class SubUIManageField : SubUIManager
         _inventoryPopup.gameObject.SetActive(false);
 
         RectTransform BSrectTransform = _blockScreen.GetComponent<RectTransform>();
-        BSrectTransform.sizeDelta = new Vector2(_canvasWidth, _canvasHeight);
+        BSrectTransform.sizeDelta = new Vector2(_canvasWidth + 5, _canvasHeight + 5); // 조금 크게 만들어서 화면을 완전히 덮자
         _blockScreen.SetActive(false);
 
         _gameOverPopup.RestartButton.onClick.AddListener(Revive);

@@ -174,6 +174,8 @@ public class BeatenState<T> : FiniteState<T> where T : class
 public class DieState <T> : FiniteState<T> where T : class
 {
     public int AttackerID;
+    public float BeatenDirectionX;
+    public float BeatenDirectionZ;
 
     public DieState(T newOwner)
     {
