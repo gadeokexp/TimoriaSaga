@@ -7,6 +7,9 @@ public class SubUIManageField : SubUIManager
     public FieldPannel _fieldPannel;
     public StatusPopup _statusPopup;
     public InventoryPopup _inventoryPopup;
+    public GameOverPopup _gameOverPopup;
+
+    public GameObject _blockScreen;
 
     public override void Active()
     {
@@ -19,6 +22,9 @@ public class SubUIManageField : SubUIManager
         _fieldPannel = pannelObject.GetComponent<FieldPannel>();
         _statusPopup = pannelObject.GetComponentInChildren<StatusPopup>();
         _inventoryPopup = pannelObject.GetComponentInChildren<InventoryPopup>();
+        _gameOverPopup = pannelObject.GetComponentInChildren<GameOverPopup>();
+
+        _blockScreen = pannelObject.transform.Find("blockScreen").gameObject;
 
         if (_fieldPannel == null)
         {
@@ -37,6 +43,13 @@ public class SubUIManageField : SubUIManager
         float inventoryY = _canvasHeight * 0.2f;
         _inventoryPopup.SetPosition(inventoryX, inventoryY);
         _inventoryPopup.gameObject.SetActive(false);
+
+        RectTransform BSrectTransform = _blockScreen.GetComponent<RectTransform>();
+        BSrectTransform.sizeDelta = new Vector2(_canvasWidth, _canvasHeight);
+        _blockScreen.SetActive(false);
+
+        _gameOverPopup.RestartButton.onClick.AddListener(Revive);
+        _gameOverPopup.gameObject.SetActive(false);
     }
 
     public override void Deactive()
@@ -54,5 +67,21 @@ public class SubUIManageField : SubUIManager
         {
             _inventoryPopup.gameObject.SetActive(true);
         }
+    }
+
+    public void ShowGameOverPopup(bool activeSelf)
+    {
+        _blockScreen.SetActive(activeSelf);
+        _gameOverPopup.gameObject.SetActive(activeSelf);
+    }
+
+    public void Revive()
+    {
+        _inventoryPopup.gameObject.SetActive(false);
+        _gameOverPopup.gameObject.SetActive(false);
+        _blockScreen.SetActive(false);
+
+        CTS_Revive revivePacket = new CTS_Revive();
+        NetworkManager.Instance.Send(revivePacket.Write());
     }
 }

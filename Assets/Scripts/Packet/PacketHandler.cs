@@ -64,6 +64,29 @@ internal class PacketHandler
     {
     }
 
+    public static void STC_ReviveHandler(PacketSession session, IPacket packet)
+    {
+        STC_Revive revivePacket = packet as STC_Revive;
+
+        GameObject unit;
+
+        if (revivePacket.GameObjectId == UnitManager.Instance.PlayerID)
+        {
+            unit = UnitManager.Instance.PlayerUnit;
+        }
+        else
+        {
+            unit = UnitManager.Instance.SearchById(revivePacket.GameObjectId);
+        }
+
+        if (unit == null) return;
+
+        UnitSoul unitSoul = unit.GetComponent<UnitSoul>();
+        if (unitSoul == null) return;
+
+        unitSoul.OnRevive(revivePacket);
+    }
+
     public static void STC_MoveHandler(PacketSession session, IPacket packet)
     {
         STC_Move movePacket = packet as STC_Move;
@@ -123,7 +146,7 @@ internal class PacketHandler
 
             if (target.GameObjectId == UnitManager.Instance.PlayerID)
             {
-                unitSoul = UnitManager.Instance.Player.GetComponent<UnitSoul>();
+                unitSoul = UnitManager.Instance.PlayerUnit.GetComponent<UnitSoul>();
                 if (unitSoul == null) continue;
             }
             else

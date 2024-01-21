@@ -38,6 +38,8 @@ public class PacketManager
         maHandler.Add((ushort)PacketID.STC_Despawn, PacketHandler.STC_DespawnHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_DespawnProjectileAt, MakePacket<STC_DespawnProjectileAt>);
         maHandler.Add((ushort)PacketID.STC_DespawnProjectileAt, PacketHandler.STC_DespawnProjectileAtHandler);
+        maMakePacketJob.Add((ushort)PacketID.STC_Revive, MakePacket<STC_Revive>);
+        maHandler.Add((ushort)PacketID.STC_Revive, PacketHandler.STC_ReviveHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Move, MakePacket<STC_Move>);
         maHandler.Add((ushort)PacketID.STC_Move, PacketHandler.STC_MoveHandler);
         maMakePacketJob.Add((ushort)PacketID.STC_Idle, MakePacket<STC_Idle>);

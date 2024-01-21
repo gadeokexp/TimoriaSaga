@@ -13,24 +13,26 @@ public enum PacketID
 	STC_UnitSpawn = 5,
 	STC_Despawn = 6,
 	STC_DespawnProjectileAt = 7,
-	CTS_Move = 8,
-	STC_Move = 9,
-	CTS_Idle = 10,
-	STC_Idle = 11,
-	STC_Turn = 12,
-	STC_FixPosition = 13,
-	CTS_Skill = 14,
-	STC_Skill = 15,
-	STC_Beaten = 16,
-	STC_ChangeHp = 17,
-	STC_Die = 18,
-	CTS_Die = 19,
-	STC_Connected = 20,
-	CTS_RequestLogin = 21,
-	STC_PermitLogin = 22,
-	STC_DenyLogin = 23,
-	CTS_CreatNewUnit = 24,
-	STC_ResponseCreatNewUnit = 25,
+	CTS_Revive = 8,
+	STC_Revive = 9,
+	CTS_Move = 10,
+	STC_Move = 11,
+	CTS_Idle = 12,
+	STC_Idle = 13,
+	STC_Turn = 14,
+	STC_FixPosition = 15,
+	CTS_Skill = 16,
+	STC_Skill = 17,
+	STC_Beaten = 18,
+	STC_ChangeHp = 19,
+	STC_Die = 20,
+	CTS_Die = 21,
+	STC_Connected = 22,
+	CTS_RequestLogin = 23,
+	STC_PermitLogin = 24,
+	STC_DenyLogin = 25,
+	CTS_CreatNewUnit = 26,
+	STC_ResponseCreatNewUnit = 27,
 	
 }
 
@@ -815,6 +817,120 @@ public class STC_DespawnProjectileAt : IPacket
 		count += sizeof(int);
 		
 		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.positionY);
+		count += sizeof(int);
+		
+        serializeFlag &= BitConverter.TryWriteBytes(span, count);
+
+        if (serializeFlag == false) return null;
+
+        return segment;
+    }
+}
+public class CTS_Revive : IPacket
+{
+    
+    public ushort Protocol { get { return (ushort)PacketID.CTS_Revive; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> readSpan = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+
+        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        // 4는 패킷 해더 길이값(ushort) + ID(ushort) 속도를 생각해서 4로 넣음
+        int packetLength = 4;
+
+        ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
+        ushort count = 0;
+        bool serializeFlag = true;
+
+        Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.CTS_Revive);
+        count += sizeof(ushort);
+
+        
+        serializeFlag &= BitConverter.TryWriteBytes(span, count);
+
+        if (serializeFlag == false) return null;
+
+        return segment;
+    }
+}
+public class STC_Revive : IPacket
+{
+    public int GameObjectId;
+	public float positionX;
+	public float positionY;
+	public float positionZ;
+	public int maxHp;
+    public ushort Protocol { get { return (ushort)PacketID.STC_Revive; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> readSpan = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+
+        this.GameObjectId = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(int);
+		
+		this.positionX = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(float);
+		
+		this.positionY = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(float);
+		
+		this.positionZ = BitConverter.ToSingle(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(float);
+		
+		this.maxHp = BitConverter.ToInt32(readSpan.Slice(count, readSpan.Length - count));
+		count += sizeof(int);
+		
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        // 4는 패킷 해더 길이값(ushort) + ID(ushort) 속도를 생각해서 4로 넣음
+        int packetLength = 4;
+        packetLength += sizeof(int);
+        packetLength += sizeof(float);
+        packetLength += sizeof(float);
+        packetLength += sizeof(float);
+        packetLength += sizeof(int);
+        ArraySegment<byte> segment = SendBufferPool.UsingBufferStart(packetLength);
+        ushort count = 0;
+        bool serializeFlag = true;
+
+        Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.STC_Revive);
+        count += sizeof(ushort);
+
+        serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.GameObjectId);
+		count += sizeof(int);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.positionX);
+		count += sizeof(float);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.positionY);
+		count += sizeof(float);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.positionZ);
+		count += sizeof(float);
+		
+		serializeFlag &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.maxHp);
 		count += sizeof(int);
 		
         serializeFlag &= BitConverter.TryWriteBytes(span, count);

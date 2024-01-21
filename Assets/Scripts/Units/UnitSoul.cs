@@ -73,6 +73,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         IdleState<UnitSoul> idleState = states[(int)UnitState.Idle] as IdleState<UnitSoul>;
         idleState.Enter += OnIdleEnter;
+        idleState.Enter += OnIdleExit;
         idleState.Update += OnSimpleRotateUpdate;
 
         HitState<UnitSoul> hitState = states[(int)UnitState.Hit] as HitState<UnitSoul>;
@@ -251,6 +252,11 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         SchduleAnimationChange((int)UnitState.Idle);
     }
 
+    void OnIdleExit()
+    {
+        Debug.Log("아이들 나감");
+    }
+
     void OnHitEnter()
     {
         // 임시
@@ -262,7 +268,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
             SendSkillPacket();
         }
 
-        StartCoroutine(WaitForSwing(0.6f));
+        StartCoroutine(WaitSwing(0.6f));
 
         int currentMotion = animator.GetInteger("currentState");
 
@@ -301,7 +307,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         RotationtoLook();
 
-        StartCoroutine(WaitForBeaten(0.2f));
+        StartCoroutine(WaitBeaten(0.2f));
     }
 
     void OnBeatenExit()
@@ -313,6 +319,20 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
     {
         SchduleAnimationChange((int)UnitState.Die);
 
+        if (IsMyCharacter)
+        {
+            // 내 유닛이 죽었을 경우 게임오버 팝업 실행
+            StartCoroutine(WaitDieRoutine(1.5f));
+        }
+        else
+        {
+            // 각 클라이언트들은 각자 유닛간 충돌 관계를 관리하는 부분이 있다.
+            // 원래 죽으면 컬리전 Exit 핸들러에서 이를 처리해줘야 하는데
+            // 컬리전이 단순히 비활성화 될때 종종 처리가안된다.
+            // 그래서 어떤 유닛이 죽으면 각 클라이언트들은 죽은 유닛의 충돌 관계를 손수 정리해줄 필요가 있었다.
+            UnitManager.Instance.PlayerUnitSoul.RemoveCollisionRelationshipWith(ID);
+        }        
+
         CapsuleCollider[] colliders = gameObject.GetComponents<CapsuleCollider>();
 
         foreach (CapsuleCollider collider in colliders)
@@ -322,6 +342,16 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.isKinematic = true;
+    }
+
+    public void RemoveCollisionRelationshipWith(int id)
+    {
+        if (!IsMyCharacter) return;
+
+        if(_myCharactersCollision.ContainsKey(id))
+        {
+            _myCharactersCollision.Remove(id);
+        }
     }
 
     void OnDieExit()
@@ -361,6 +391,29 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
     }
 
+    public void OnRevive(STC_Revive revivePacket)
+    {
+        // 유닛 애니메이션 아이들로 강제 전환
+        animator.SetInteger("currentState", 0);
+        animator.Play("Idle_SwordShield");
+
+        transform.position = new Vector3(revivePacket.positionX, revivePacket.positionY, revivePacket.positionZ);
+
+        _hp = _maxHp;
+
+        CapsuleCollider[] colliders = gameObject.GetComponents<CapsuleCollider>();
+
+        foreach (CapsuleCollider collider in colliders)
+        {
+            collider.enabled = true;
+        }
+
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+
+        currentState = null;
+    }
+
     IEnumerator ClearPosition()
     {
         while (true)
@@ -388,16 +441,28 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
     }
 
-    IEnumerator WaitForSwing(float term)
+    IEnumerator WaitSwing(float term)
     {
         yield return new WaitForSeconds(term);
         currentState = null;
     }
 
-    IEnumerator WaitForBeaten(float term)
+    IEnumerator WaitBeaten(float term)
     {
         yield return new WaitForSeconds(term);
         currentState = null;
+    }
+
+    IEnumerator WaitDieRoutine(float term)
+    {
+        yield return new WaitForSeconds(term);
+
+        SubUIManageField fieldUI = UIManager.Instance.CurrentUISubManager as SubUIManageField;
+
+        if (fieldUI != null)
+        {
+            fieldUI.ShowGameOverPopup(true);
+        }
     }
 
     protected void SendMovePacket()
