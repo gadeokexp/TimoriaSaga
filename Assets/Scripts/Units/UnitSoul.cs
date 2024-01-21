@@ -87,7 +87,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         DieState<UnitSoul> dieState = states[(int)UnitState.Die] as DieState<UnitSoul>;
         dieState.Enter += OnDieEnter;
-        dieState.Exit += OnDieExit;
 
         if (_isMyCharacter)
         {
@@ -102,12 +101,34 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
     void Update()
     {
+        // 에니메이션 체인지 명령이 갑작스럽게(한번에) 다수 들어온다면 멈춰버린다.
+        // 이를 막기위해 에니메이션이 바뀐경우 그것을 최소 0.01초는 유지한다.
         _animationChangeDelta += Time.deltaTime;
 
         if(_animationChangeDelta > 0.01f && _animationChangeCommander.GetCount() > 0)
         {
             _animationChangeDelta = 0;
             _animationChangeCommander.Excute();
+        }
+
+        // 충돌중인 두개의 충돌체가 물리적으로 떨어지는 상황이 아니라 하나의 충돌체가 Active(false)될때
+        // 출돌이 끝난것을 감지 하지 못하곤 한다.
+        // 이를 위해 유닛간의 충돌 같은 경우 손수 관리해줄 필요가 있다.
+
+        // 참고로 충돌체크는 서버에서도 또한 관리해줘야 하는데
+        // 클라이언트에서도 동시에 관리하면 깔끔한 게임 운영에 도움을 준다.
+        if (_isMyCharacter)
+        {
+            Vector3 lengthVector;
+
+            foreach (var eachCollisionEntity in _myCharactersCollision)
+            {
+                lengthVector = eachCollisionEntity.Value.transform.position - transform.position;
+                if(lengthVector.sqrMagnitude > 2)
+                {
+                    _myCharactersCollision.Remove(eachCollisionEntity.Key);
+                }
+            }
         }
 
         if (currentState != null && currentState.Update != null)
@@ -245,7 +266,7 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
 
         if(_isMyCharacter)
         {
-            _myCharactersCollision.Clear();
+            //_myCharactersCollision.Clear();
             SendIdlePacket();
         }
 
@@ -360,10 +381,6 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         }
     }
 
-    void OnDieExit()
-    {
-    }
-
     float _accumulatedDelta = 1.0f;
     Quaternion lookingDirectionAngle = Quaternion.identity;
 
@@ -404,7 +421,8 @@ public class UnitSoul : UnitStateAgent<UnitSoul>
         animator.Play("Idle_SwordShield");
 
         transform.position = new Vector3(revivePacket.positionX, revivePacket.positionY, revivePacket.positionZ);
-        transform.forward = new Vector3(0, 0, -1);
+        _DirectionNeedToLookAt = Vector3.back;
+        transform.rotation = Quaternion.LookRotation(_DirectionNeedToLookAt);
 
         _hp = _maxHp;
 
